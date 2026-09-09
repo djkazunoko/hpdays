@@ -1,0 +1,32 @@
+[
+  {
+    "memberId": "oda-sakura",
+    "groupId": "morning-musume",
+    "startedAt": "2012-09-14",
+    "endedAt": null
+  },
+  {
+    "memberId": "sakurai-rio",
+    "groupId": "morning-musume",
+    "startedAt": "2022-06-29",
+    "endedAt": null
+  },
+  {
+    "memberId": "yamazaki-mei",
+    "groupId": "morning-musume",
+    "startedAt": "2019-06-22",
+    "endedAt": null
+  },
+  {
+    "memberId": "fukumura-mizuki",
+    "groupId": "morning-musume",
+    "startedAt": "2011-01-02",
+    "endedAt": "2023-11-29"
+  },
+  {
+    "memberId": "ikuta-erina",
+    "groupId": "morning-musume",
+    "startedAt": "2011-01-02",
+    "endedAt": "2025-07-08"
+  }
+]
