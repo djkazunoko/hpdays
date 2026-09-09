@@ -1,0 +1,27 @@
+[
+  {
+    "id": "oda-sakura",
+    "name": "小田さくら",
+    "birthday": "1999-03-12"
+  },
+  {
+    "id": "sakurai-rio",
+    "name": "櫻井梨央",
+    "birthday": "2005-11-11"
+  },
+  {
+    "id": "yamazaki-mei",
+    "name": "山﨑愛生",
+    "birthday": "2005-06-28"
+  },
+  {
+    "id": "fukumura-mizuki",
+    "name": "譜久村聖",
+    "birthday": "1996-10-30"
+  },
+  {
+    "id": "ikuta-erina",
+    "name": "生田衣梨奈",
+    "birthday": "1997-07-07"
+  }
+]
