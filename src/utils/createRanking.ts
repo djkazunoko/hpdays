@@ -1,0 +1,34 @@
+import type {
+  GroupMembership,
+  Member,
+  RankingEntry,
+} from "../types/data"
+import { calculateMembershipDays } from "./calculateMembershipDays"
+
+export function createRanking(
+  members: Member[],
+  memberships: GroupMembership[],
+  currentDate = new Date(),
+): RankingEntry[] {
+  const entries = memberships.map((membership) => {
+    const member = members.find(
+      (member) => member.id === membership.memberId,
+    )
+
+    if (!member) {
+      throw new Error(`Member not found: ${membership.memberId}`)
+    }
+
+    return {
+      member,
+      membershipDays: calculateMembershipDays(membership, currentDate),
+    }
+  })
+
+  entries.sort((a, b) => b.membershipDays - a.membershipDays)
+
+  return entries.map((entry, index) => ({
+    rank: index + 1,
+    ...entry,
+  }))
+}
