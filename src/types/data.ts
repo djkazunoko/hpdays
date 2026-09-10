@@ -20,3 +20,9 @@ export type TraineeMembership = {
   memberId: string
   startedAt: string
 }
+
+export type RankingEntry = {
+  rank: number
+  member: Member
+  membershipDays: number
+}
