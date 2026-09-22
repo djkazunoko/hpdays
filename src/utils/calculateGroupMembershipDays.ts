@@ -8,7 +8,7 @@ function toUtcTimestamp(date: string): number {
   return Date.UTC(year, month - 1, day)
 }
 
-export function calculateMembershipDays(
+export function calculateGroupMembershipDays(
   membership: GroupMembership,
   currentDate = new Date(),
 ): number {

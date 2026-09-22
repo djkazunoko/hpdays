@@ -3,9 +3,9 @@ import type {
   Member,
   RankingEntry,
 } from "../types/data"
-import { calculateMembershipDays } from "./calculateMembershipDays"
+import { calculateGroupMembershipDays } from "./calculateGroupMembershipDays"
 
-export function createRanking(
+export function createGroupRanking(
   members: Member[],
   memberships: GroupMembership[],
   currentDate = new Date(),
@@ -21,7 +21,7 @@ export function createRanking(
 
     return {
       member,
-      membershipDays: calculateMembershipDays(membership, currentDate),
+      membershipDays: calculateGroupMembershipDays(membership, currentDate),
     }
   })
 

@@ -1,8 +1,8 @@
 import { describe, expect, test } from "vitest"
 import type { GroupMembership } from "../types/data"
-import { calculateMembershipDays } from "./calculateMembershipDays"
+import { calculateGroupMembershipDays } from "./calculateGroupMembershipDays"
 
-describe("calculateMembershipDays", () => {
+describe("calculateGroupMembershipDays", () => {
   test("加入日を1日目として、卒業済みメンバーの在籍日数を計算する", () => {
     const membership: GroupMembership = {
       memberId: "ikuta-erina",
@@ -11,7 +11,7 @@ describe("calculateMembershipDays", () => {
       endedAt: "2025-07-08",
     }
 
-    expect(calculateMembershipDays(membership)).toBe(5302)
+    expect(calculateGroupMembershipDays(membership)).toBe(5302)
   })
 
   test("現役メンバーは現在日までの在籍日数を計算する", () => {
@@ -24,7 +24,7 @@ describe("calculateMembershipDays", () => {
 
     const currentDate = new Date(2026, 8, 9)
 
-    expect(calculateMembershipDays(membership, currentDate)).toBe(5109)
+    expect(calculateGroupMembershipDays(membership, currentDate)).toBe(5109)
   })
 
   test("加入日と終了日が同じ場合は1日とする", () => {
@@ -35,6 +35,6 @@ describe("calculateMembershipDays", () => {
       endedAt: "2026-09-09",
     }
 
-    expect(calculateMembershipDays(membership)).toBe(1)
+    expect(calculateGroupMembershipDays(membership)).toBe(1)
   })
 })
