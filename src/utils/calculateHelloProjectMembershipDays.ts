@@ -1,8 +1,8 @@
-import type { GroupMembership } from "../types/data"
+import type { HelloProjectMembership } from "../types/data"
 import { calculateDateRangeDays } from "./calculateDateRangeDays"
 
-export function calculateGroupMembershipDays(
-  membership: GroupMembership,
+export function calculateHelloProjectMembershipDays(
+  membership: HelloProjectMembership,
   currentDate = new Date(),
 ): number {
   return calculateDateRangeDays(membership.startedAt, membership.endedAt, currentDate)
