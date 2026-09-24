@@ -1,3 +1,5 @@
+import type { MembershipPeriod } from "../types/data"
+
 const MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000
 
 function toUtcTimestamp(date: string): number {
@@ -8,15 +10,14 @@ function toUtcTimestamp(date: string): number {
   return day === undefined ? Date.UTC(year, month, 0) : Date.UTC(year, month - 1, day)
 }
 
-export function calculateDateRangeDays(
-  startDate: string,
-  endDate: string | null,
+export function calculateMembershipDays(
+  membership: MembershipPeriod,
   currentDate = new Date(),
 ): number {
-  const startedAt = toUtcTimestamp(startDate)
+  const startedAt = toUtcTimestamp(membership.startedAt)
 
-  const endedAt = endDate
-    ? toUtcTimestamp(endDate)
+  const endedAt = membership.endedAt
+    ? toUtcTimestamp(membership.endedAt)
     : Date.UTC(
         currentDate.getFullYear(),
         currentDate.getMonth(),

@@ -1,5 +1,5 @@
 import type { GroupMembership, HelloProjectRankingEntry, Member, TraineeMembership } from "../types/data"
-import { calculateHelloProjectMembershipDays } from "./calculateHelloProjectMembershipDays"
+import { calculateMembershipDays } from "./calculateMembershipDays"
 import { getHelloProjectMembershipPeriod } from "./getHelloProjectMembershipPeriod"
 import { rankByMembershipDays } from "./rankByMembershipDays"
 
@@ -19,7 +19,7 @@ export function createHelloProjectRanking(
     return {
       member,
       ...membership,
-      membershipDays: calculateHelloProjectMembershipDays(membership, currentDate),
+      membershipDays: calculateMembershipDays(membership, currentDate),
     }
   })
 

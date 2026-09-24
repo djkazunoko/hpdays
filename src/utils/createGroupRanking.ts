@@ -3,7 +3,7 @@ import type {
   Member,
   RankingEntry,
 } from "../types/data"
-import { calculateGroupMembershipDays } from "./calculateGroupMembershipDays"
+import { calculateMembershipDays } from "./calculateMembershipDays"
 import { rankByMembershipDays } from "./rankByMembershipDays"
 
 export function createGroupRanking(
@@ -22,7 +22,7 @@ export function createGroupRanking(
 
     return {
       member,
-      membershipDays: calculateGroupMembershipDays(membership, currentDate),
+      membershipDays: calculateMembershipDays(membership, currentDate),
     }
   })
 

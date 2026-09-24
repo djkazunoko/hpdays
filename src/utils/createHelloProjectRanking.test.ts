@@ -26,6 +26,22 @@ describe("createHelloProjectRanking", () => {
     expect({ members, memberships, trainees }).toEqual(original)
   })
 
+  test("研修生歴がない場合もグループ間の空白期間を含めて日数を計算する", () => {
+    const members = [{ id: "a", name: "A", birthday: "2000-01-01" }]
+    const ranking = createHelloProjectRanking(members, groupMemberships, [])
+
+    expect(ranking[0].membershipDays).toBe(12)
+  })
+
+  test("日単位の研修生加入日から最後の卒業日まで計算する", () => {
+    const members = [{ id: "a", name: "A", birthday: "2000-01-01" }]
+    const traineeMemberships = [{ memberId: "a", startedAt: "2019-12-31" }]
+    const ranking = createHelloProjectRanking(members, groupMemberships, traineeMemberships)
+
+    expect(ranking[0].startedAt).toBe("2019-12-31")
+    expect(ranking[0].membershipDays).toBe(13)
+  })
+
   test("空のデータでは空のランキングを返す", () => {
     expect(createHelloProjectRanking([], [], [])).toEqual([])
   })
