@@ -1,8 +1,4 @@
-import type {
-  GroupMembership,
-  Member,
-  RankingEntry,
-} from "../types/data"
+import type { GroupMembership, Member, RankingEntry } from "../types/data"
 import { calculateMembershipDays } from "./calculateMembershipDays"
 import { rankByMembershipDays } from "./rankByMembershipDays"
 
