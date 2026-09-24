@@ -27,9 +27,9 @@ export type RankingEntry = {
   membershipDays: number
 }
 
-export type HelloProjectMembership = {
+export type HelloProjectMembershipPeriod = {
   startedAt: string
   endedAt: string | null
 }
 
-export type HelloProjectRankingEntry = RankingEntry & HelloProjectMembership
+export type HelloProjectRankingEntry = RankingEntry & HelloProjectMembershipPeriod

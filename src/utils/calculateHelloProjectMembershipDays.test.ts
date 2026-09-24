@@ -1,9 +1,9 @@
 import { describe, expect, test, vi, afterEach } from "vitest"
 import type { GroupMembership } from "../types/data"
-import { getHelloProjectMembership } from "./getHelloProjectMembership"
+import { getHelloProjectMembershipPeriod } from "./getHelloProjectMembershipPeriod"
 import { calculateHelloProjectMembershipDays } from "./calculateHelloProjectMembershipDays"
 
-const groups: GroupMembership[] = [
+const groupMemberships: GroupMembership[] = [
   { memberId: "a", groupId: "second", startedAt: "2020-01-10", endedAt: "2020-01-12" },
   { memberId: "a", groupId: "first", startedAt: "2020-01-01", endedAt: "2020-01-03" },
 ]
@@ -12,11 +12,11 @@ afterEach(() => vi.useRealTimers())
 
 describe("calculateHelloProjectMembershipDays", () => {
   test("活動の空白期間を含め、加入日を1日目として計算する", () => {
-    expect(calculateHelloProjectMembershipDays(getHelloProjectMembership("a", groups, [])!)).toBe(12)
+    expect(calculateHelloProjectMembershipDays(getHelloProjectMembershipPeriod("a", groupMemberships, [])!)).toBe(12)
   })
 
   test("研修生加入日から卒業日まで計算する", () => {
-    const membership = getHelloProjectMembership("a", groups, [{ memberId: "a", startedAt: "2019-12-31" }])!
+    const membership = getHelloProjectMembershipPeriod("a", groupMemberships, [{ memberId: "a", startedAt: "2019-12-31" }])!
     expect(calculateHelloProjectMembershipDays(membership)).toBe(13)
   })
 

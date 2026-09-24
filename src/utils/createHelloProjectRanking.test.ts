@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest"
 import type { GroupMembership } from "../types/data"
 import { createHelloProjectRanking } from "./createHelloProjectRanking"
 
-const groups: GroupMembership[] = [
+const groupMemberships: GroupMembership[] = [
   { memberId: "a", groupId: "second", startedAt: "2020-01-10", endedAt: "2020-01-12" },
   { memberId: "a", groupId: "first", startedAt: "2020-01-01", endedAt: "2020-01-03" },
 ]
@@ -11,7 +11,7 @@ describe("createHelloProjectRanking", () => {
   test("メンバー単位で最小在籍日数の降順に並べ、同順位の次を飛ばす", () => {
     const members = ["d", "b", "a", "c", "trainee"].map((id) => ({ id, name: id, birthday: "2000-01-01" }))
     const memberships = [
-      ...groups,
+      ...groupMemberships,
       { memberId: "b", groupId: "group", startedAt: "2020-01-02", endedAt: null },
       { memberId: "c", groupId: "group", startedAt: "2020-01-02", endedAt: "2020-01-12" },
       { memberId: "d", groupId: "group", startedAt: "2020-01-12", endedAt: null },
@@ -31,6 +31,6 @@ describe("createHelloProjectRanking", () => {
   })
 
   test("在籍データに対応するメンバーがなければエラーになる", () => {
-    expect(() => createHelloProjectRanking([], groups, [])).toThrow("Member not found: a")
+    expect(() => createHelloProjectRanking([], groupMemberships, [])).toThrow("Member not found: a")
   })
 })

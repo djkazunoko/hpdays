@@ -1,22 +1,22 @@
-import type { GroupMembership, HelloProjectMembership, TraineeMembership } from "../types/data"
+import type { GroupMembership, HelloProjectMembershipPeriod, TraineeMembership } from "../types/data"
 
-export function getHelloProjectMembership(
+export function getHelloProjectMembershipPeriod(
   memberId: string,
   groupMemberships: GroupMembership[],
   traineeMemberships: TraineeMembership[],
-): HelloProjectMembership | null {
+): HelloProjectMembershipPeriod | null {
   const memberships = groupMemberships.filter((entry) => entry.memberId === memberId)
   if (memberships.length === 0) return null
 
   const trainee = traineeMemberships.find((entry) => entry.memberId === memberId)
   const startedAt = trainee?.startedAt ?? memberships.reduce(
-    (earliest, entry) => entry.startedAt < earliest ? entry.startedAt : earliest,
+    (earliestStartedAt, entry) => entry.startedAt < earliestStartedAt ? entry.startedAt : earliestStartedAt,
     memberships[0].startedAt,
   )
   const endedAt = memberships.some((entry) => entry.endedAt === null)
     ? null
     : memberships.reduce(
-        (latest, entry) => entry.endedAt! > latest ? entry.endedAt! : latest,
+        (latestEndedAt, entry) => entry.endedAt! > latestEndedAt ? entry.endedAt! : latestEndedAt,
         memberships[0].endedAt!,
       )
 
