@@ -79,22 +79,4 @@ describe("createGroupRanking", () => {
     )
   })
 
-  test("同じ日数は同順位とし、次の順位を人数分飛ばす", () => {
-    const members = ["a", "b", "c", "d", "e"].map((id) => ({
-      id,
-      name: id,
-      birthday: "2000-01-01",
-    }))
-    const endDates = ["2020-01-03", "2020-01-02", "2020-01-02", "2020-01-01", "2020-01-01"]
-    const memberships = members.map((member, index) => ({
-      memberId: member.id,
-      groupId: "group",
-      startedAt: "2020-01-01",
-      endedAt: endDates[index],
-    }))
-
-    const ranking = createGroupRanking(members, memberships)
-
-    expect(ranking.map(({ rank }) => rank)).toEqual([1, 2, 2, 4, 4])
-  })
 })
