@@ -1,8 +1,8 @@
 import { describe, expect, test } from "vitest"
 import type { GroupMembership, Member } from "../types/data"
-import { createRanking } from "./createRanking"
+import { createGroupRanking } from "./createGroupRanking"
 
-describe("createRanking", () => {
+describe("createGroupRanking", () => {
   test("在籍日数の長い順にランキングを作成する", () => {
     const members: Member[] = [
       {
@@ -45,7 +45,7 @@ describe("createRanking", () => {
 
     const currentDate = new Date(2026, 8, 10)
 
-    const ranking = createRanking(members, memberships, currentDate)
+    const ranking = createGroupRanking(members, memberships, currentDate)
 
     expect(ranking.map((entry) => entry.member.id)).toEqual([
       "ikuta-erina",
@@ -74,8 +74,9 @@ describe("createRanking", () => {
       },
     ]
 
-    expect(() => createRanking(members, memberships)).toThrow(
+    expect(() => createGroupRanking(members, memberships)).toThrow(
       "Member not found: ikuta-erina",
     )
   })
+
 })

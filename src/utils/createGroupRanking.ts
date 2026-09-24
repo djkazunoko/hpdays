@@ -1,11 +1,8 @@
-import type {
-  GroupMembership,
-  Member,
-  RankingEntry,
-} from "../types/data"
+import type { GroupMembership, Member, RankingEntry } from "../types/data"
 import { calculateMembershipDays } from "./calculateMembershipDays"
+import { rankByMembershipDays } from "./rankByMembershipDays"
 
-export function createRanking(
+export function createGroupRanking(
   members: Member[],
   memberships: GroupMembership[],
   currentDate = new Date(),
@@ -25,10 +22,5 @@ export function createRanking(
     }
   })
 
-  entries.sort((a, b) => b.membershipDays - a.membershipDays)
-
-  return entries.map((entry, index) => ({
-    rank: index + 1,
-    ...entry,
-  }))
+  return rankByMembershipDays(entries)
 }
