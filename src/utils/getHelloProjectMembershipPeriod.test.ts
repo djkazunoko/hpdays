@@ -3,13 +3,19 @@ import type { GroupMembership } from "../types/data"
 import { getHelloProjectMembershipPeriod } from "./getHelloProjectMembershipPeriod"
 
 const groupMemberships: GroupMembership[] = [
-  { memberId: "a", groupId: "second", startedAt: "2020-01-10", endedAt: "2020-01-12" },
   { memberId: "a", groupId: "first", startedAt: "2020-01-01", endedAt: "2020-01-03" },
+  { memberId: "a", groupId: "second", startedAt: "2020-01-10", endedAt: "2020-01-12" },
 ]
 
 describe("getHelloProjectMembershipPeriod", () => {
-  test("最初の加入日から最後の卒業日までを導出する", () => {
-    expect(getHelloProjectMembershipPeriod("a", groupMemberships, [])).toEqual({ startedAt: "2020-01-01", endedAt: "2020-01-12" })
+  test("在籍履歴の並び順に関係なく最初の加入日と最後の卒業日を返す", () => {
+    const expectedMembership = {
+      startedAt: "2020-01-01",
+      endedAt: "2020-01-12",
+    }
+
+    expect(getHelloProjectMembershipPeriod("a", groupMemberships, [])).toEqual(expectedMembership)
+    expect(getHelloProjectMembershipPeriod("a", [...groupMemberships].reverse(), [])).toEqual(expectedMembership)
   })
 
   test("研修生加入日の精度を保ち、他メンバーのデータを使わない", () => {
@@ -23,7 +29,7 @@ describe("getHelloProjectMembershipPeriod", () => {
     expect(getHelloProjectMembershipPeriod("a", [{ ...groupMemberships[0], endedAt: null }, groupMemberships[1]], [])?.endedAt).toBeNull()
   })
 
-  test("グループ在籍歴がなければ対象外にする", () => {
+  test("対象メンバーのグループ在籍履歴がなければnullを返す", () => {
     expect(getHelloProjectMembershipPeriod("b", groupMemberships, [{ memberId: "b", startedAt: "2010-01" }])).toBeNull()
   })
 })
