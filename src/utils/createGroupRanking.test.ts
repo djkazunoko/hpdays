@@ -78,5 +78,4 @@ describe("createGroupRanking", () => {
       "Member not found: ikuta-erina",
     )
   })
-
 })

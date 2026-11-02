@@ -32,6 +32,4 @@ export type MembershipPeriod = {
   endedAt: string | null
 }
 
-export type HelloProjectMembershipPeriod = MembershipPeriod
-
-export type HelloProjectRankingEntry = RankingEntry & HelloProjectMembershipPeriod
+export type HelloProjectRankingEntry = RankingEntry & MembershipPeriod
