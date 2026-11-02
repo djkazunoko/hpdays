@@ -1,10 +1,10 @@
-import type { GroupMembership, HelloProjectMembershipPeriod, TraineeMembership } from "../types/data"
+import type { GroupMembership, MembershipPeriod, TraineeMembership } from "../types/data"
 
 export function getHelloProjectMembershipPeriod(
   memberId: string,
   groupMemberships: GroupMembership[],
   traineeMemberships: TraineeMembership[],
-): HelloProjectMembershipPeriod | null {
+): MembershipPeriod | null {
   const memberships = groupMemberships.filter((entry) => entry.memberId === memberId)
   if (memberships.length === 0) return null
 
