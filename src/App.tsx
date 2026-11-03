@@ -1,10 +1,16 @@
 import { useState } from 'react'
+import { Route, Routes } from 'react-router'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import './App.css'
+import groupMemberships from './data/group-memberships.json'
+import members from './data/members.json'
+import traineeMemberships from './data/trainee-memberships.json'
+import { RankingPage } from './pages/RankingPage'
+import { createHelloProjectRanking } from './utils/createHelloProjectRanking'
 
-function App() {
+function Home() {
   const [count, setCount] = useState(0)
 
   return (
@@ -116,6 +122,22 @@ function App() {
       <div className="ticks"></div>
       <section id="spacer"></section>
     </>
+  )
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route
+        path="/rankings"
+        element={
+          <RankingPage
+            ranking={createHelloProjectRanking(members, groupMemberships, traineeMemberships)}
+          />
+        }
+      />
+    </Routes>
   )
 }
 

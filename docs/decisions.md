@@ -51,10 +51,12 @@
 - 加入日が月までしか分からない場合は、月末を計算上の開始境界として「確認できる最小在籍日数」を求める。実際の加入日を月末と推定するものではなく、元の日付精度は保持する。
 - ランキングは在籍日数の降順とし、月単位の加入日は最小在籍日数で比較する。
 - Hello! Project・グループの両ランキングで、同日数は同順位とし、次の順位は同順位の人数分を飛ばす（例：1、2、2、4位）。
+- 最小在籍日数は「○○日以上」と表示し、確認できる最小値であることが分かるようにする。
 
 参照：[Issue #4の数え方](https://github.com/djkazunoko/hpdays/issues/4#issuecomment-5596338412)、
 [Issue #15](https://github.com/djkazunoko/hpdays/issues/15)、
-[PR #16](https://github.com/djkazunoko/hpdays/pull/16)
+[PR #16](https://github.com/djkazunoko/hpdays/pull/16)、
+[Issue #6](https://github.com/djkazunoko/hpdays/issues/6)
 
 ## URL設計
 
@@ -75,8 +77,10 @@
 - 絞り込み、並び順、選択状態など、共有時に再現する価値のある表示条件はクエリパラメータで表す。具体的な名前・保持する状態は各機能の実装時に決める。
 - ズーム倍率、スクロール位置、hover状態など、一時的なUI状態までURLに保持する必要はない。
 - メンバー比較など、将来の機能のURLは必要になった時点で決定する。
+- 直接アクセスされたURLは、Cloudflare Pagesが `index.html` を返し、React Routerで表示する画面を決める。この動作はビルド結果に `404.html` がない場合に限られるため、`404.html` は置かず、存在しないページはReact Routerで表示する。
 
-参照：[Issue #14のURL設計](https://github.com/djkazunoko/hpdays/issues/14#issuecomment-5679652169)
+参照：[Issue #14のURL設計](https://github.com/djkazunoko/hpdays/issues/14#issuecomment-5679652169)、
+[PR #22](https://github.com/djkazunoko/hpdays/pull/22)
 
 ## 画面設計
 
@@ -96,3 +100,18 @@
 
 参照：[Issue #13の画面設計](https://github.com/djkazunoko/hpdays/issues/13#issuecomment-5676335637)、
 [Issue #14のURL設計](https://github.com/djkazunoko/hpdays/issues/14#issuecomment-5679652169)
+
+## 実装方針
+
+### 計算と表示の分離
+
+- 在籍日数、順位などの計算や判定は `src/utils` のTypeScriptで行い、Reactのコンポーネントは結果を表示する。
+- 表示の切り替えに必要な判定（例：在籍日数が最小在籍日数か）も計算結果に含め、コンポーネントではデータ設計上のルールを判定しない。表示する文言や形式はコンポーネントで決める。
+- ページのコンポーネントは表示するデータをpropsで受け取り、JSONの読み込みと計算処理の呼び出しはルート定義で行う。
+
+### ライブラリ
+
+- ルーティングにはReact Routerを使用する。`/rankings/:groupId` などのパスパラメータや存在しないページの扱いが必要になるため、自前でパスを分岐させない。
+- 画面のテストにはTesting Libraryとjsdomを使用し、表示されるテキストや要素の役割で検証する。jsdomは画面のテストファイルだけで指定し、計算処理のテストはNode環境で実行する。
+
+参照：[PR #22](https://github.com/djkazunoko/hpdays/pull/22)

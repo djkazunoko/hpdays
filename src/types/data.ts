@@ -32,4 +32,6 @@ export type MembershipPeriod = {
   endedAt: string | null
 }
 
-export type HelloProjectRankingEntry = RankingEntry & MembershipPeriod
+export type HelloProjectRankingEntry = RankingEntry & MembershipPeriod & {
+  isMinimumMembershipDays: boolean
+}

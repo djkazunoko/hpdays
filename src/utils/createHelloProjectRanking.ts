@@ -1,6 +1,7 @@
 import type { GroupMembership, HelloProjectRankingEntry, Member, TraineeMembership } from "../types/data"
 import { calculateMembershipDays } from "./calculateMembershipDays"
 import { getHelloProjectMembershipPeriod } from "./getHelloProjectMembershipPeriod"
+import { isMinimumMembershipDays } from "./isMinimumMembershipDays"
 import { rankByMembershipDays } from "./rankByMembershipDays"
 
 export function createHelloProjectRanking(
@@ -20,6 +21,7 @@ export function createHelloProjectRanking(
       member,
       ...membership,
       membershipDays: calculateMembershipDays(membership, currentDate),
+      isMinimumMembershipDays: isMinimumMembershipDays(membership),
     }
   })
 

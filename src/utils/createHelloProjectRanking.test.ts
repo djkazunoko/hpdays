@@ -26,6 +26,8 @@ describe("createHelloProjectRanking", () => {
       ["multi-group-member", 13, 1], ["active-member", 11, 2], ["graduated-member", 11, 2], ["new-member", 1, 4],
     ])
     expect(ranking[0].startedAt).toBe("2019-12")
+    expect(ranking[0].isMinimumMembershipDays).toBe(true)
+    expect(ranking[1].isMinimumMembershipDays).toBe(false)
   })
 
   test("研修生歴がない場合もグループ間の空白期間を含めて日数を計算する", () => {
