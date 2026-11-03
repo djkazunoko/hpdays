@@ -8,13 +8,14 @@ function createEntry(
   rank: number,
   name: string,
   membershipDays: number,
-  startedAt: string,
+  isMinimumMembershipDays = false,
 ): HelloProjectRankingEntry {
   return {
     rank,
     member: { id: name, name, birthday: "2000-01-01" },
     membershipDays,
-    startedAt,
+    isMinimumMembershipDays,
+    startedAt: "2000-01-01",
     endedAt: null,
   }
 }
@@ -30,10 +31,10 @@ afterEach(cleanup)
 describe("RankingPage", () => {
   test("順位・メンバー名・在籍日数を表示し、同じ在籍日数は同順位で表示する", () => {
     const ranking = [
-      createEntry(1, "メンバーA", 5302, "2012-01-01"),
-      createEntry(2, "メンバーB", 100, "2020-01-01"),
-      createEntry(2, "メンバーC", 100, "2020-01-01"),
-      createEntry(4, "メンバーD", 1, "2025-01-01"),
+      createEntry(1, "メンバーA", 5302),
+      createEntry(2, "メンバーB", 100),
+      createEntry(2, "メンバーC", 100),
+      createEntry(4, "メンバーD", 1),
     ]
     render(<RankingPage ranking={ranking} />)
 
@@ -46,8 +47,8 @@ describe("RankingPage", () => {
     ])
   })
 
-  test("加入日が月までしか分からないメンバーは在籍日数を「日以上」と表示する", () => {
-    render(<RankingPage ranking={[createEntry(1, "メンバーA", 5302, "2011-11")]} />)
+  test("確認できる最小在籍日数は「日以上」と表示する", () => {
+    render(<RankingPage ranking={[createEntry(1, "メンバーA", 5302, true)]} />)
 
     expect(getRowTexts()).toEqual([["1", "メンバーA", "5302日以上"]])
   })
