@@ -32,22 +32,30 @@
 | `trainee-memberships.json` | 研修生歴のあるメンバーのIDと研修生加入日 |
 
 - 研修生のみで活動を終了し、Hello! Projectのグループ・ユニット等でデビューしていない人物は掲載対象としない。
+- ファーストリリースの掲載対象は、現役グループに在籍したことがある人とする。サブメンバーも在籍とみなす。
+- `groups.json` には現役グループだけを保持する。ユニット、シャッフルユニット、期間限定・企画ユニット、活動を終了した過去グループは保持しない。
+- 改名したグループは同じグループとして扱い、現在の名前を使う。
+- 研修生歴とグループ在籍からHello! Project加入日・卒業日を導出できない人に限り、その日付を `members.json` に保持する。過去グループの追加などで導出できるようになった場合は削除する。
 - ハロプロ研修生、ハロプロエッグ、ハロー！プロジェクト・キッズ、ハロプロ研修生北海道は、同じ「研修生」として扱い、種類を示すデータは保持しない。
-- 研修生期間の終了日は、最初のグループ加入日から導出し、JSONには保持しない。
+- 研修生期間の終了日は、最初のグループ加入日から導出し、JSONには保持しない。過去グループを経由した人や、グループ在籍の後に研修生になった人は正しく導出できないが、研修生期間を使う機能を作る時点で対応する。
 - 日付は、日まで確認できる場合は `YYYY-MM-DD`、月までの場合は `YYYY-MM` で保持し、不明な日を補完しない。
+- 脱退・活動終了・契約解除は区別せず、卒業と同じく終了日として扱う。終わり方の種類は保持しない。
 - ファーストリリースではメンバーカラーを使用しない。
 - 期・世代は使用する機能が決まるまで追加しない。必要になった場合、グループの期は `GroupMembership` に保持する。
 
 参照：[Issue #2のデータ構成](https://github.com/djkazunoko/hpdays/issues/2#issuecomment-5595104572)、
 [研修生期間の終了日](https://github.com/djkazunoko/hpdays/issues/2#issuecomment-5595313092)、
-[Issue #12の検討結果](https://github.com/djkazunoko/hpdays/issues/12#issuecomment-5652131242)
+[Issue #12の検討結果](https://github.com/djkazunoko/hpdays/issues/12#issuecomment-5652131242)、
+[Issue #21の決定事項](https://github.com/djkazunoko/hpdays/issues/21#issuecomment-6595817335)
 
 ### 在籍期間・日数・順位
 
 - 在籍日数は加入日を1日目として、加入日と終了日の両方を含めて計算する。現役メンバーは現在日を終了日として計算する。
-- Hello! Project加入日は、研修生歴があれば研修生加入日、なければ最も古いグループ加入日とする。
+- Hello! Project加入日・卒業日は、`members.json` に保持している場合はその値を使い、保持していない場合は以下のとおり導出する。
+- Hello! Project加入日は、研修生加入日と最も古いグループ加入日の早い方とする。
 - Hello! Project卒業日は、卒業済みメンバーでは最も遅いグループ卒業日から導出する。現役のグループ在籍があれば現役として扱う。
-- Hello! Project在籍期間は、活動休止期間などがあっても連続した期間として扱う。
+- Hello! Project在籍期間は、活動休止期間などがあっても連続した期間として扱う。Hello! Projectを離れた後に復帰した場合も、最初の加入日から最後の卒業日まで連続した期間として扱う。
+- グループ卒業でHello! Projectを離れた後の活動のうち、Hello! Projectの一員として扱われていないものは在籍期間に含めない。
 - 加入日が月までしか分からない場合は、月末を計算上の開始境界として「確認できる最小在籍日数」を求める。実際の加入日を月末と推定するものではなく、元の日付精度は保持する。
 - ランキングは在籍日数の降順とし、月単位の加入日は最小在籍日数で比較する。
 - Hello! Project・グループの両ランキングで、同日数は同順位とし、次の順位は同順位の人数分を飛ばす（例：1、2、2、4位）。
@@ -56,7 +64,8 @@
 参照：[Issue #4の数え方](https://github.com/djkazunoko/hpdays/issues/4#issuecomment-5596338412)、
 [Issue #15](https://github.com/djkazunoko/hpdays/issues/15)、
 [PR #16](https://github.com/djkazunoko/hpdays/pull/16)、
-[Issue #6](https://github.com/djkazunoko/hpdays/issues/6)
+[Issue #6](https://github.com/djkazunoko/hpdays/issues/6)、
+[Issue #21の決定事項](https://github.com/djkazunoko/hpdays/issues/21#issuecomment-6595817335)
 
 ## URL設計
 
