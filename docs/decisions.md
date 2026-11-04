@@ -86,10 +86,11 @@
 - 絞り込み、並び順、選択状態など、共有時に再現する価値のある表示条件はクエリパラメータで表す。具体的な名前・保持する状態は各機能の実装時に決める。
 - ズーム倍率、スクロール位置、hover状態など、一時的なUI状態までURLに保持する必要はない。
 - メンバー比較など、将来の機能のURLは必要になった時点で決定する。
-- 直接アクセスされたURLは、Cloudflare Pagesが `index.html` を返し、React Routerで表示する画面を決める。この動作はビルド結果に `404.html` がない場合に限られるため、`404.html` は置かず、存在しないページはReact Routerで表示する。
+- 直接アクセスされたURLは、Cloudflare Workersが `index.html` を返し、React Routerで表示する画面を決める。この動作は `wrangler.jsonc` の `not_found_handling: "single-page-application"` で明示的に設定し、存在しないページもReact Routerで表示する。
 
 参照：[Issue #14のURL設計](https://github.com/djkazunoko/hpdays/issues/14#issuecomment-5679652169)、
-[PR #22](https://github.com/djkazunoko/hpdays/pull/22)
+[PR #22](https://github.com/djkazunoko/hpdays/pull/22)、
+[Issue #24の決定事項](https://github.com/djkazunoko/hpdays/issues/24#issuecomment-6621823936)
 
 ## 画面設計
 
@@ -133,3 +134,12 @@
 
 参照：[Issue #23](https://github.com/djkazunoko/hpdays/issues/23)、
 [PR #27](https://github.com/djkazunoko/hpdays/pull/27)
+
+### デプロイ
+
+- Cloudflare Workers（Static Assets）で、ビルド結果を静的ファイルとして配信する。設定はダッシュボードではなく `wrangler.jsonc` で管理する。
+- GitHubとの連携にはWorkers Buildsを使い、mainへのpushで本番環境にデプロイし、PRごとにプレビュー環境を作成する。デプロイはCIの結果を待たずに行われるため、PRのマージにCIの成功を必須とすることで補う。
+- 開発中は無料の `workers.dev` のURLで運用する。独自ドメインはファーストリリース時に導入し、正式なアプリ名とあわせて決める。
+
+参照：[Issue #24の決定事項](https://github.com/djkazunoko/hpdays/issues/24#issuecomment-6621823936)、
+[PR #28](https://github.com/djkazunoko/hpdays/pull/28)
