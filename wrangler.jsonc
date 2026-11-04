@@ -3,6 +3,7 @@
   "name": "hpdays",
   "compatibility_date": "2026-11-04",
   "send_metrics": false,
+  "preview_urls": true,
   "assets": {
     "directory": "./dist",
     "not_found_handling": "single-page-application"
