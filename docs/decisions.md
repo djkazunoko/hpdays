@@ -124,3 +124,12 @@
 - 画面のテストにはTesting Libraryとjsdomを使用し、表示されるテキストや要素の役割で検証する。jsdomは画面のテストファイルだけで指定し、計算処理のテストはNode環境で実行する。
 
 参照：[PR #22](https://github.com/djkazunoko/hpdays/pull/22)
+
+### CI・開発環境
+
+- PRとmainへのpushで、GitHub Actionsによりlint・テスト・ビルドを実行する。Vitestは型チェックを行わないため、型エラーはビルドで検出する。
+- Node.jsのバージョンは `.nvmrc` だけで指定し、CIやデプロイ先のビルドからも参照する。LTSのバージョンを使用する。
+- mainブランチはRulesetsで保護し、PRのマージにはCIの成功を必須とする。軽微な修正をmainへ直接コミットできるよう、リポジトリ管理者はルールを回避できるようにする。PRの承認やmainへの追従は必須にしない。
+
+参照：[Issue #23](https://github.com/djkazunoko/hpdays/issues/23)、
+[PR #27](https://github.com/djkazunoko/hpdays/pull/27)
