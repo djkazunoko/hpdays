@@ -1,23 +1,5 @@
 [
   {
-    "memberId": "oda-sakura",
-    "groupId": "morning-musume",
-    "startedAt": "2012-09-14",
-    "endedAt": null
-  },
-  {
-    "memberId": "sakurai-rio",
-    "groupId": "morning-musume",
-    "startedAt": "2022-06-29",
-    "endedAt": null
-  },
-  {
-    "memberId": "yamazaki-mei",
-    "groupId": "morning-musume",
-    "startedAt": "2019-06-22",
-    "endedAt": null
-  },
-  {
     "memberId": "fukumura-mizuki",
     "groupId": "morning-musume",
     "startedAt": "2011-01-02",
@@ -28,5 +10,113 @@
     "groupId": "morning-musume",
     "startedAt": "2011-01-02",
     "endedAt": "2025-07-08"
+  },
+  {
+    "memberId": "oda-sakura",
+    "groupId": "morning-musume",
+    "startedAt": "2012-09-14",
+    "endedAt": null
+  },
+  {
+    "memberId": "ogata-haruna",
+    "groupId": "morning-musume",
+    "startedAt": "2014-09-30",
+    "endedAt": "2018-06-20"
+  },
+  {
+    "memberId": "nonaka-miki",
+    "groupId": "morning-musume",
+    "startedAt": "2014-09-30",
+    "endedAt": null
+  },
+  {
+    "memberId": "makino-maria",
+    "groupId": "morning-musume",
+    "startedAt": "2014-09-30",
+    "endedAt": "2026-06-24"
+  },
+  {
+    "memberId": "haga-akane",
+    "groupId": "morning-musume",
+    "startedAt": "2014-09-30",
+    "endedAt": "2025-12-05"
+  },
+  {
+    "memberId": "kaga-kaede",
+    "groupId": "morning-musume",
+    "startedAt": "2016-12-12",
+    "endedAt": "2022-12-10"
+  },
+  {
+    "memberId": "yokoyama-reina",
+    "groupId": "morning-musume",
+    "startedAt": "2016-12-12",
+    "endedAt": "2025-12-05"
+  },
+  {
+    "memberId": "morito-chisaki",
+    "groupId": "morning-musume",
+    "startedAt": "2017-06-26",
+    "endedAt": "2022-06-20"
+  },
+  {
+    "memberId": "kitagawa-rio",
+    "groupId": "morning-musume",
+    "startedAt": "2019-06-22",
+    "endedAt": "2025-12-27"
+  },
+  {
+    "memberId": "okamura-homare",
+    "groupId": "morning-musume",
+    "startedAt": "2019-06-22",
+    "endedAt": null
+  },
+  {
+    "memberId": "yamazaki-mei",
+    "groupId": "morning-musume",
+    "startedAt": "2019-06-22",
+    "endedAt": null
+  },
+  {
+    "memberId": "sakurai-rio",
+    "groupId": "morning-musume",
+    "startedAt": "2022-06-29",
+    "endedAt": null
+  },
+  {
+    "memberId": "inoue-haruka",
+    "groupId": "morning-musume",
+    "startedAt": "2023-05-23",
+    "endedAt": null
+  },
+  {
+    "memberId": "yumigeta-ako",
+    "groupId": "morning-musume",
+    "startedAt": "2023-05-23",
+    "endedAt": null
+  },
+  {
+    "memberId": "sugihara-meisa",
+    "groupId": "morning-musume",
+    "startedAt": "2026-03-21",
+    "endedAt": null
+  },
+  {
+    "memberId": "yasuda-miyu",
+    "groupId": "morning-musume",
+    "startedAt": "2026-06-24",
+    "endedAt": null
+  },
+  {
+    "memberId": "suzuki-moa",
+    "groupId": "morning-musume",
+    "startedAt": "2026-06-24",
+    "endedAt": null
+  },
+  {
+    "memberId": "ishikawa-hanano",
+    "groupId": "morning-musume",
+    "startedAt": "2026-06-24",
+    "endedAt": null
   }
 ]

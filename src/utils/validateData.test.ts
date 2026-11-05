@@ -151,6 +151,16 @@ describe("validateData", () => {
       },
     )
 
+    test.each(["2011", "2011-13", "2011-11-31", "2011/11"])(
+      "H!P加入日の明示値が存在するYYYY-MMまたはYYYY-MM-DDでなければエラーになる: %s",
+      (helloProjectStartedAt) => {
+        expect(validateData({
+          ...validData,
+          members: [{ ...validData.members[0], helloProjectStartedAt }, validData.members[1]],
+        })).toContain(`Invalid helloProjectStartedAt: active-member ${helloProjectStartedAt}`)
+      },
+    )
+
     test("研修生加入日はYYYY-MM-DDでもエラーにならない", () => {
       expect(validateData({
         ...validData,
@@ -178,6 +188,33 @@ describe("validateData", () => {
           { ...validData.groupMemberships[1], endedAt: "2011-01-02" },
         ],
       })).toEqual([])
+    })
+  })
+
+  describe("H!P加入日の明示値", () => {
+    test("導出したH!P加入日より前ならエラーにならない", () => {
+      expect(validateData({
+        ...validData,
+        members: [{ ...validData.members[0], helloProjectStartedAt: "2011-10-31" }, validData.members[1]],
+      })).toEqual([])
+    })
+
+    test.each(["2011-11", "2012-01-01"])(
+      "研修生歴とグループ在籍から導出したH!P加入日より前でなければエラーになる: %s",
+      (helloProjectStartedAt) => {
+        expect(validateData({
+          ...validData,
+          members: [{ ...validData.members[0], helloProjectStartedAt }, validData.members[1]],
+        })).toEqual([`Explicit helloProjectStartedAt is not before derived: active-member ${helloProjectStartedAt} 2011-11`])
+      },
+    )
+
+    test("研修生歴がなければ最も古いグループ加入日と比較する", () => {
+      expect(validateData({
+        ...validData,
+        members: [{ ...validData.members[0], helloProjectStartedAt: "2012-09-14" }, validData.members[1]],
+        traineeMemberships: [validData.traineeMemberships[1]],
+      })).toEqual(["Explicit helloProjectStartedAt is not before derived: active-member 2012-09-14 2012-09-14"])
     })
   })
 

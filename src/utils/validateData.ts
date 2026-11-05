@@ -1,4 +1,5 @@
 import type { Group, GroupMembership, Member, TraineeMembership } from "../types/data"
+import { getHelloProjectMembershipPeriod } from "./getHelloProjectMembershipPeriod"
 
 export type Data = {
   members: Member[]
@@ -39,6 +40,22 @@ export function validateData({ members, groups, groupMemberships, traineeMembers
   for (const member of members) {
     if (!isValidDate(member.birthday)) {
       errors.push(`Invalid birthday: ${member.id} ${member.birthday}`)
+    }
+
+    const { helloProjectStartedAt } = member
+    if (helloProjectStartedAt === undefined) continue
+
+    if (!isValidDate(helloProjectStartedAt, true)) {
+      errors.push(`Invalid helloProjectStartedAt: ${member.id} ${helloProjectStartedAt}`)
+    }
+    // 明示値は導出できない場合だけ持つ。導出値より前でなければ、導出できるようになった値の消し忘れか入力ミスとみなす。
+    const derivedPeriod = getHelloProjectMembershipPeriod(
+      { ...member, helloProjectStartedAt: undefined },
+      groupMemberships,
+      traineeMemberships,
+    )
+    if (derivedPeriod && helloProjectStartedAt >= derivedPeriod.startedAt) {
+      errors.push(`Explicit helloProjectStartedAt is not before derived: ${member.id} ${helloProjectStartedAt} ${derivedPeriod.startedAt}`)
     }
   }
 
