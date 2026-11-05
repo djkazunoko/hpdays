@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { cleanup, render, screen, within } from "@testing-library/react"
 import { afterEach, describe, expect, test } from "vitest"
-import type { HelloProjectRankingEntry } from "../types/data"
+import type { HelloProjectRankingEntry, RankingEntry } from "../types/data"
 import { RankingPage } from "./RankingPage"
 
 function createEntry(
@@ -51,5 +51,15 @@ describe("RankingPage", () => {
     render(<RankingPage ranking={[createEntry(1, "メンバーA", 5302, true)]} />)
 
     expect(getRowTexts()).toEqual([["1", "メンバーA", "5302日以上"]])
+  })
+
+  test("グループを指定した場合はグループ名を見出しに表示する", () => {
+    const ranking: RankingEntry[] = [
+      { rank: 1, member: { id: "a", name: "メンバーA", birthday: "2000-01-01" }, membershipDays: 100 },
+    ]
+    render(<RankingPage group={{ id: "group-a", name: "グループA" }} ranking={ranking} />)
+
+    expect(screen.getByRole("heading", { name: "グループA 在籍日数ランキング" })).toBeDefined()
+    expect(getRowTexts()).toEqual([["1", "メンバーA", "100日"]])
   })
 })

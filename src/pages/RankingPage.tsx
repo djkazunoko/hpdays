@@ -1,17 +1,23 @@
-import type { HelloProjectRankingEntry } from "../types/data"
+import type { Group, RankingEntry } from "../types/data"
 
-type Props = {
-  ranking: HelloProjectRankingEntry[]
+// グループ在籍は日単位の日付だけを持つため、グループ別ランキングでは最小在籍日数の判定を持たない。
+type Entry = RankingEntry & {
+  isMinimumMembershipDays?: boolean
 }
 
-function formatMembershipDays(entry: HelloProjectRankingEntry): string {
+type Props = {
+  group?: Group
+  ranking: Entry[]
+}
+
+function formatMembershipDays(entry: Entry): string {
   return `${entry.membershipDays}日${entry.isMinimumMembershipDays ? "以上" : ""}`
 }
 
-export function RankingPage({ ranking }: Props) {
+export function RankingPage({ group, ranking }: Props) {
   return (
     <main>
-      <h1>在籍日数ランキング</h1>
+      <h1>{group ? `${group.name} 在籍日数ランキング` : "在籍日数ランキング"}</h1>
       <table>
         <thead>
           <tr>

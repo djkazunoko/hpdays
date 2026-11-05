@@ -1,13 +1,16 @@
 import { useState } from 'react'
-import { Route, Routes } from 'react-router'
+import { Route, Routes, useParams } from 'react-router'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import './App.css'
 import groupMemberships from './data/group-memberships.json'
+import groups from './data/groups.json'
 import members from './data/members.json'
 import traineeMemberships from './data/trainee-memberships.json'
+import { NotFoundPage } from './pages/NotFoundPage'
 import { RankingPage } from './pages/RankingPage'
+import { createGroupRanking } from './utils/createGroupRanking'
 import { createHelloProjectRanking } from './utils/createHelloProjectRanking'
 
 function Home() {
@@ -125,6 +128,15 @@ function Home() {
   )
 }
 
+function GroupRankingRoute() {
+  const { groupId } = useParams()
+  const group = groups.find((group) => group.id === groupId)
+  if (!group) return <NotFoundPage />
+
+  const memberships = groupMemberships.filter((membership) => membership.groupId === group.id)
+  return <RankingPage group={group} ranking={createGroupRanking(members, memberships)} />
+}
+
 function App() {
   return (
     <Routes>
@@ -137,6 +149,8 @@ function App() {
           />
         }
       />
+      <Route path="/rankings/:groupId" element={<GroupRankingRoute />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )
 }
