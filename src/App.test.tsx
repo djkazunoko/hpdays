@@ -4,6 +4,12 @@ import { MemoryRouter } from "react-router"
 import { afterEach, describe, expect, test, vi } from "vitest"
 import App from "./App"
 
+function getRowTexts() {
+  return screen.getAllByRole("row").slice(1).map((row) =>
+    within(row).getAllByRole("cell").map((cell) => cell.textContent),
+  )
+}
+
 afterEach(() => {
   cleanup()
   vi.useRealTimers()
@@ -18,10 +24,7 @@ describe("App", () => {
       </MemoryRouter>,
     )
 
-    const rows = screen.getAllByRole("row").slice(1).map((row) =>
-      within(row).getAllByRole("cell").map((cell) => cell.textContent),
-    )
-    expect(rows).toEqual([
+    expect(getRowTexts()).toEqual([
       ["1", "譜久村聖", "5631日以上"],
       ["2", "小田さくら", "5453日以上"],
       ["3", "生田衣梨奈", "5302日"],
@@ -39,10 +42,7 @@ describe("App", () => {
     )
 
     expect(screen.getByRole("heading", { name: "モーニング娘。 在籍日数ランキング" })).toBeDefined()
-    const rows = screen.getAllByRole("row").slice(1).map((row) =>
-      within(row).getAllByRole("cell").map((cell) => cell.textContent),
-    )
-    expect(rows).toEqual([
+    expect(getRowTexts()).toEqual([
       ["1", "生田衣梨奈", "5302日"],
       ["2", "小田さくら", "5164日"],
       ["3", "譜久村聖", "4715日"],
