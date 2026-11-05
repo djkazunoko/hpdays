@@ -16,7 +16,7 @@ export function createHelloProjectRanking(
     if (!member) throw new Error(`Member not found: ${memberId}`)
 
     // memberIdsはグループ在籍データから取得しているため、在籍期間は必ず存在する。
-    const membershipPeriod = getHelloProjectMembershipPeriod(memberId, groupMemberships, traineeMemberships)!
+    const membershipPeriod = getHelloProjectMembershipPeriod(member, groupMemberships, traineeMemberships)!
     return {
       member,
       membershipDays: calculateMembershipDays(membershipPeriod, currentDate),

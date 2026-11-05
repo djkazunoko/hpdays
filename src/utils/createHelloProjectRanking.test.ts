@@ -44,6 +44,13 @@ describe("createHelloProjectRanking", () => {
     expect(ranking[0].membershipDays).toBe(13)
   })
 
+  test("H!P加入日の明示値から最後の卒業日まで計算する", () => {
+    const members = [{ id: "multi-group-member", name: "A", birthday: "2000-01-01", helloProjectStartedAt: "2019-12-31" }]
+    const ranking = createHelloProjectRanking(members, groupMemberships, [])
+
+    expect(ranking[0].membershipDays).toBe(13)
+  })
+
   test("空のデータでは空のランキングを返す", () => {
     expect(createHelloProjectRanking([], [], [])).toEqual([])
   })
