@@ -1,16 +1,11 @@
 import type { Group, RankingEntry } from "../types/data"
 
-// グループ在籍は日単位の日付だけを持つため、グループ別ランキングでは最小在籍日数の判定を持たない。
-type Entry = RankingEntry & {
-  isMinimumMembershipDays?: boolean
-}
-
 type Props = {
   group?: Group
-  ranking: Entry[]
+  ranking: RankingEntry[]
 }
 
-function formatMembershipDays(entry: Entry): string {
+function formatMembershipDays(entry: RankingEntry): string {
   return `${entry.membershipDays}日${entry.isMinimumMembershipDays ? "以上" : ""}`
 }
 

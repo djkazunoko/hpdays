@@ -56,6 +56,34 @@ describe("createGroupRanking", () => {
     expect(ranking.map((entry) => entry.rank)).toEqual([1, 2, 3])
   })
 
+  test("在籍日数が最小在籍日数かどうかを含める", () => {
+    const member: Member = {
+      id: "oda-sakura",
+      name: "小田さくら",
+      birthday: "1999-03-12",
+    }
+
+    const memberships: GroupMembership[] = [
+      {
+        memberId: "oda-sakura",
+        groupId: "morning-musume",
+        startedAt: "2012-09-14",
+        endedAt: null,
+      },
+    ]
+
+    const ranking = createGroupRanking("morning-musume", [member], memberships, new Date(2012, 8, 15))
+
+    expect(ranking).toEqual([
+      {
+        rank: 1,
+        member,
+        membershipDays: 2,
+        isMinimumMembershipDays: false,
+      },
+    ])
+  })
+
   test("指定したグループの在籍データだけでランキングを作成する", () => {
     const members: Member[] = [
       {
