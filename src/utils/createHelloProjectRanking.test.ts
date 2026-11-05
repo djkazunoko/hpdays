@@ -25,7 +25,6 @@ describe("createHelloProjectRanking", () => {
     expect(ranking.map(({ member, membershipDays, rank }) => [member.id, membershipDays, rank])).toEqual([
       ["multi-group-member", 13, 1], ["active-member", 11, 2], ["graduated-member", 11, 2], ["new-member", 1, 4],
     ])
-    expect(ranking[0].startedAt).toBe("2019-12")
     expect(ranking[0].isMinimumMembershipDays).toBe(true)
     expect(ranking[1].isMinimumMembershipDays).toBe(false)
   })
@@ -42,7 +41,6 @@ describe("createHelloProjectRanking", () => {
     const traineeMemberships = [{ memberId: "multi-group-member", startedAt: "2019-12-31" }]
     const ranking = createHelloProjectRanking(members, groupMemberships, traineeMemberships)
 
-    expect(ranking[0].startedAt).toBe("2019-12-31")
     expect(ranking[0].membershipDays).toBe(13)
   })
 

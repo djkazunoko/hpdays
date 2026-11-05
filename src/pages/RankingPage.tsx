@@ -1,17 +1,18 @@
-import type { HelloProjectRankingEntry } from "../types/data"
+import type { Group, RankingEntry } from "../types/data"
 
 type Props = {
-  ranking: HelloProjectRankingEntry[]
+  group?: Group
+  ranking: RankingEntry[]
 }
 
-function formatMembershipDays(entry: HelloProjectRankingEntry): string {
+function formatMembershipDays(entry: RankingEntry): string {
   return `${entry.membershipDays}日${entry.isMinimumMembershipDays ? "以上" : ""}`
 }
 
-export function RankingPage({ ranking }: Props) {
+export function RankingPage({ group, ranking }: Props) {
   return (
     <main>
-      <h1>在籍日数ランキング</h1>
+      <h1>{group ? `${group.name} 在籍日数ランキング` : "在籍日数ランキング"}</h1>
       <table>
         <thead>
           <tr>
