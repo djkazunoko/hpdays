@@ -1,40 +1,34 @@
 // @vitest-environment jsdom
 import { cleanup, render, screen, within } from "@testing-library/react"
 import { MemoryRouter } from "react-router"
-import { afterEach, describe, expect, test, vi } from "vitest"
+import { afterEach, describe, expect, test } from "vitest"
 import App from "./App"
+import groupMemberships from "./data/group-memberships.json"
+import members from "./data/members.json"
 
-function getRowTexts() {
-  return screen.getAllByRole("row").slice(1).map((row) =>
-    within(row).getAllByRole("cell").map((cell) => cell.textContent),
-  )
+// 順位や日数の正しさは計算処理と画面のテストで検証し、ここではデータの追加・修正の影響を受けないよう表示されるメンバーだけを確認する。
+function getRowMemberNames() {
+  return screen.getAllByRole("row").slice(1).map((row) => within(row).getAllByRole("cell")[1].textContent).sort()
 }
 
-afterEach(() => {
-  cleanup()
-  vi.useRealTimers()
-})
+function getMemberNames(memberIds: string[]) {
+  return memberIds.map((memberId) => members.find((member) => member.id === memberId)?.name).sort()
+}
+
+afterEach(cleanup)
 
 describe("App", () => {
-  test("/rankingsで登録データから生成したHello! Project在籍日数ランキングを表示する", () => {
-    vi.useFakeTimers({ now: new Date(2026, 10, 3), toFake: ["Date"] })
+  test("/rankingsでグループ在籍のある全メンバーのHello! Project在籍日数ランキングを表示する", () => {
     render(
       <MemoryRouter initialEntries={["/rankings"]}>
         <App />
       </MemoryRouter>,
     )
 
-    expect(getRowTexts()).toEqual([
-      ["1", "譜久村聖", "5631日以上"],
-      ["2", "小田さくら", "5513日"],
-      ["3", "生田衣梨奈", "5302日"],
-      ["4", "山﨑愛生", "3749日"],
-      ["5", "櫻井梨央", "1589日"],
-    ])
+    expect(getRowMemberNames()).toEqual(getMemberNames([...new Set(groupMemberships.map((membership) => membership.memberId))]))
   })
 
-  test("/rankings/:groupIdで登録データから生成したグループの在籍日数ランキングを表示する", () => {
-    vi.useFakeTimers({ now: new Date(2026, 10, 3), toFake: ["Date"] })
+  test("/rankings/:groupIdでそのグループに在籍した全メンバーの在籍日数ランキングを表示する", () => {
     render(
       <MemoryRouter initialEntries={["/rankings/morning-musume"]}>
         <App />
@@ -42,13 +36,9 @@ describe("App", () => {
     )
 
     expect(screen.getByRole("heading", { name: "モーニング娘。 在籍日数ランキング" })).toBeDefined()
-    expect(getRowTexts()).toEqual([
-      ["1", "生田衣梨奈", "5302日"],
-      ["2", "小田さくら", "5164日"],
-      ["3", "譜久村聖", "4715日"],
-      ["4", "山﨑愛生", "2692日"],
-      ["5", "櫻井梨央", "1589日"],
-    ])
+    expect(getRowMemberNames()).toEqual(getMemberNames(
+      groupMemberships.filter((membership) => membership.groupId === "morning-musume").map((membership) => membership.memberId),
+    ))
   })
 
   test.each(["/rankings/unknown-group", "/unknown-page"])(
