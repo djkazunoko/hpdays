@@ -133,8 +133,7 @@ function GroupRankingRoute() {
   const group = groups.find((group) => group.id === groupId)
   if (!group) return <NotFoundPage />
 
-  const memberships = groupMemberships.filter((membership) => membership.groupId === group.id)
-  return <RankingPage group={group} ranking={createGroupRanking(members, memberships)} />
+  return <RankingPage group={group} ranking={createGroupRanking(group.id, members, groupMemberships)} />
 }
 
 function App() {

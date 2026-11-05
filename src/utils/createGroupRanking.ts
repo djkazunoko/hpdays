@@ -3,10 +3,14 @@ import { calculateMembershipDays } from "./calculateMembershipDays"
 import { rankByMembershipDays } from "./rankByMembershipDays"
 
 export function createGroupRanking(
+  groupId: string,
   members: Member[],
-  memberships: GroupMembership[],
+  groupMemberships: GroupMembership[],
   currentDate = new Date(),
 ): RankingEntry[] {
+  const memberships = groupMemberships.filter(
+    (membership) => membership.groupId === groupId,
+  )
   const entries = memberships.map((membership) => {
     const member = members.find(
       (member) => member.id === membership.memberId,
