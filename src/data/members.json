@@ -1,20 +1,5 @@
 [
   {
-    "id": "oda-sakura",
-    "name": "小田さくら",
-    "birthday": "1999-03-12"
-  },
-  {
-    "id": "sakurai-rio",
-    "name": "櫻井梨央",
-    "birthday": "2005-11-11"
-  },
-  {
-    "id": "yamazaki-mei",
-    "name": "山﨑愛生",
-    "birthday": "2005-06-28"
-  },
-  {
     "id": "fukumura-mizuki",
     "name": "譜久村聖",
     "birthday": "1996-10-30"
@@ -23,5 +8,127 @@
     "id": "ikuta-erina",
     "name": "生田衣梨奈",
     "birthday": "1997-07-07"
+  },
+  {
+    "id": "sayashi-riho",
+    "name": "鞘師里保",
+    "birthday": "1998-05-28",
+    "helloProjectEndedAt": "2018-11-30"
+  },
+  {
+    "id": "suzuki-kanon",
+    "name": "鈴木香音",
+    "birthday": "1998-08-05"
+  },
+  {
+    "id": "iikubo-haruna",
+    "name": "飯窪春菜",
+    "birthday": "1994-11-07"
+  },
+  {
+    "id": "ishida-ayumi",
+    "name": "石田亜佑美",
+    "birthday": "1997-01-07"
+  },
+  {
+    "id": "sato-masaki",
+    "name": "佐藤優樹",
+    "birthday": "1999-05-07"
+  },
+  {
+    "id": "kudo-haruka",
+    "name": "工藤遥",
+    "birthday": "1999-10-27"
+  },
+  {
+    "id": "oda-sakura",
+    "name": "小田さくら",
+    "birthday": "1999-03-12"
+  },
+  {
+    "id": "ogata-haruna",
+    "name": "尾形春水",
+    "birthday": "1999-02-15"
+  },
+  {
+    "id": "nonaka-miki",
+    "name": "野中美希",
+    "birthday": "1999-10-07"
+  },
+  {
+    "id": "makino-maria",
+    "name": "牧野真莉愛",
+    "birthday": "2001-02-02"
+  },
+  {
+    "id": "haga-akane",
+    "name": "羽賀朱音",
+    "birthday": "2002-03-07"
+  },
+  {
+    "id": "kaga-kaede",
+    "name": "加賀楓",
+    "birthday": "1999-11-30"
+  },
+  {
+    "id": "yokoyama-reina",
+    "name": "横山玲奈",
+    "birthday": "2001-02-22"
+  },
+  {
+    "id": "morito-chisaki",
+    "name": "森戸知沙希",
+    "birthday": "2000-02-19",
+    "helloProjectStartedAt": "2014-11-05"
+  },
+  {
+    "id": "kitagawa-rio",
+    "name": "北川莉央",
+    "birthday": "2004-03-16"
+  },
+  {
+    "id": "okamura-homare",
+    "name": "岡村ほまれ",
+    "birthday": "2005-05-09"
+  },
+  {
+    "id": "yamazaki-mei",
+    "name": "山﨑愛生",
+    "birthday": "2005-06-28"
+  },
+  {
+    "id": "sakurai-rio",
+    "name": "櫻井梨央",
+    "birthday": "2005-11-11"
+  },
+  {
+    "id": "inoue-haruka",
+    "name": "井上春華",
+    "birthday": "2006-05-06"
+  },
+  {
+    "id": "yumigeta-ako",
+    "name": "弓桁朱琴",
+    "birthday": "2008-07-08"
+  },
+  {
+    "id": "sugihara-meisa",
+    "name": "杉原明紗",
+    "birthday": "2011-12-20"
+  },
+  {
+    "id": "yasuda-miyu",
+    "name": "安田美結",
+    "birthday": "2012-04-19"
+  },
+  {
+    "id": "suzuki-moa",
+    "name": "鈴木もあ",
+    "birthday": "2013-04-12"
+  },
+  {
+    "id": "ishikawa-hanano",
+    "name": "石川華望",
+    "birthday": "2013-09-09"
   }
 ]

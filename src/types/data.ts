@@ -2,6 +2,8 @@ export type Member = {
   id: string
   name: string
   birthday: string
+  helloProjectStartedAt?: string
+  helloProjectEndedAt?: string
 }
 
 export type Group = {

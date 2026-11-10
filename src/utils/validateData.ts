@@ -1,4 +1,5 @@
 import type { Group, GroupMembership, Member, TraineeMembership } from "../types/data"
+import { getHelloProjectMembershipPeriod } from "./getHelloProjectMembershipPeriod"
 
 export type Data = {
   members: Member[]
@@ -39,6 +40,35 @@ export function validateData({ members, groups, groupMemberships, traineeMembers
   for (const member of members) {
     if (!isValidDate(member.birthday)) {
       errors.push(`Invalid birthday: ${member.id} ${member.birthday}`)
+    }
+
+    const { helloProjectStartedAt, helloProjectEndedAt } = member
+    if (helloProjectStartedAt === undefined && helloProjectEndedAt === undefined) continue
+
+    // 明示値は導出できない場合だけ持つ。導出値より外側でなければ、導出できるようになった値の消し忘れか入力ミスとみなす。
+    const derivedPeriod = getHelloProjectMembershipPeriod(
+      { ...member, helloProjectStartedAt: undefined, helloProjectEndedAt: undefined },
+      groupMemberships,
+      traineeMemberships,
+    )
+
+    if (helloProjectStartedAt !== undefined) {
+      if (!isValidDate(helloProjectStartedAt, true)) {
+        errors.push(`Invalid helloProjectStartedAt: ${member.id} ${helloProjectStartedAt}`)
+      }
+      if (derivedPeriod && helloProjectStartedAt >= derivedPeriod.startedAt) {
+        errors.push(`Explicit helloProjectStartedAt is not before derived: ${member.id} ${helloProjectStartedAt} ${derivedPeriod.startedAt}`)
+      }
+    }
+
+    if (helloProjectEndedAt !== undefined) {
+      if (!isValidDate(helloProjectEndedAt)) {
+        errors.push(`Invalid helloProjectEndedAt: ${member.id} ${helloProjectEndedAt}`)
+      }
+      // 現役のグループ在籍がある（導出値がnull）場合も、H!P卒業日を持つのは矛盾するためエラーとする。
+      if (derivedPeriod && (derivedPeriod.endedAt === null || helloProjectEndedAt <= derivedPeriod.endedAt)) {
+        errors.push(`Explicit helloProjectEndedAt is not after derived: ${member.id} ${helloProjectEndedAt} ${derivedPeriod.endedAt}`)
+      }
     }
   }
 

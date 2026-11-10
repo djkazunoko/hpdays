@@ -1,14 +1,46 @@
 [
   {
+    "memberId": "fukumura-mizuki",
+    "startedAt": "2008-06-22"
+  },
+  {
+    "memberId": "kudo-haruka",
+    "startedAt": "2010-03-27"
+  },
+  {
     "memberId": "oda-sakura",
-    "startedAt": "2011-11"
+    "startedAt": "2011-10-01"
+  },
+  {
+    "memberId": "kaga-kaede",
+    "startedAt": "2012-11-01"
+  },
+  {
+    "memberId": "makino-maria",
+    "startedAt": "2012-11-01"
+  },
+  {
+    "memberId": "haga-akane",
+    "startedAt": "2013-09-22"
   },
   {
     "memberId": "yamazaki-mei",
-    "startedAt": "2016-07"
+    "startedAt": "2016-07-30"
   },
   {
-    "memberId": "fukumura-mizuki",
-    "startedAt": "2008-06"
+    "memberId": "yokoyama-reina",
+    "startedAt": "2016-08-17"
+  },
+  {
+    "memberId": "sugihara-meisa",
+    "startedAt": "2024-02-07"
+  },
+  {
+    "memberId": "suzuki-moa",
+    "startedAt": "2025-02-05"
+  },
+  {
+    "memberId": "ishikawa-hanano",
+    "startedAt": "2025-02-05"
   }
 ]
