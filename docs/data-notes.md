@@ -10,6 +10,63 @@
 
 ## モーニング娘。
 
+### 飯窪春菜（iikubo-haruna）
+
+- モーニング娘。加入日：2011-09-29
+  - [公式プロフィールのスナップショット（2018-12-15）](https://web.archive.org/web/20181215195053/https://helloproject.com/morningmusume/profile/haruna_iikubo/)のハロー！プロジェクト加入日（モーニング娘。加入日）
+  - 日本武道館の「モーニング娘。コンサートツアー2011秋 愛BELIEVE〜高橋愛 卒業記念スペシャル〜」でモーニング娘。10期として発表された日
+  - 参考：[モーニング娘。10期加入の公式ニュース](https://helloproject.com/news/1204/)は2011-09-30
+  - 参考：[オリコンの記事](https://www.oricon.co.jp/news/2002254/full/)
+- グループ卒業日：2018-12-16
+  - 卒業公演「モーニング娘。'18コンサートツアー秋〜GET SET, GO!〜ファイナル 飯窪春菜卒業スペシャル」の日（日本武道館）。モーニング娘。と同時にH!Pも卒業
+    - [ツアーファイナル（日本武道館）のチケット先行受付の公式ニュース](https://helloproject.com/news/9417/)
+    - [卒業スペシャル（12月16日）のライブビューイングの公式ニュース](https://helloproject.com/news/9558/)
+    - [卒業公演後の本人の最後のブログ](https://ameblo.jp/morningmusume-10ki/entry-12426409802.html)（2018-12-16）
+  - 参考：[卒業に関する公式ニュース](https://helloproject.com/news/9019/)は2018-08-17。秋ツアーをもって卒業すると発表された
+
+### 石田亜佑美（ishida-ayumi）
+
+- モーニング娘。加入日：2011-09-29
+  - [公式プロフィールのスナップショット（2024-12-04）](https://web.archive.org/web/20241204160518/https://helloproject.com/morningmusume/profile/ayumi_ishida/)のハロー！プロジェクト加入日（モーニング娘。加入日）
+  - 参考：[モーニング娘。10期加入の公式ニュース](https://helloproject.com/news/1204/)は2011-09-30
+  - 参考：[オリコンの記事](https://www.oricon.co.jp/news/2002254/full/)
+- グループ卒業日：2024-12-06
+  - 卒業公演「モーニング娘。'24 コンサートツアー秋 WE CAN DANCE !〜Blå Eld〜石田亜佑美 FINAL」の日（横浜アリーナ）。モーニング娘。と同時にH!Pも卒業
+    - [卒業公演の日時・会場を発表した本人のブログ](https://ameblo.jp/morningmusume-10ki/entry-12869288959.html)（2024-09-29）
+    - [卒業公演のライブビューイングの公式ニュース](https://helloproject.com/news/18137/)
+    - [卒業公演後の本人の最後のブログ](https://ameblo.jp/morningmusume-10ki/entry-12877624713.html)（2024-12-07未明）
+  - 参考：[卒業に関する公式ニュース](https://helloproject.com/news/17477/)は2024-05-26。秋ツアーをもって卒業すると発表された
+
+### 佐藤優樹（sato-masaki）
+
+- モーニング娘。加入日：2011-09-29
+  - [公式プロフィールのスナップショット（2021-12-13）](https://web.archive.org/web/20211213073004/http://helloproject.com/morningmusume/profile/masaki_satou/)のハロー！プロジェクト加入日（モーニング娘。加入日）
+  - 参考：[モーニング娘。10期加入の公式ニュース](https://helloproject.com/news/1204/)は2011-09-30
+  - 参考：[オリコンの記事](https://www.oricon.co.jp/news/2002254/full/)
+- グループ卒業日：2021-12-13
+  - 卒業公演「モーニング娘。'21 コンサート Teenage Solution 〜佐藤優樹 卒業スペシャル〜」の日（日本武道館）。モーニング娘。と同時にH!Pも卒業
+    - [卒業に関する公式ニュース](https://helloproject.com/news/13590/)（2021-09-24）。12月13日の日本武道館公演を卒業公演とすると発表された
+    - [卒業スペシャルのライブビューイングの公式ニュース](https://helloproject.com/news/13800/)
+    - [本人の最後のブログ](https://ameblo.jp/morningmusume-10ki/entry-12715422540.html)（2021-12-13）。卒業公演の当日、公演前に投稿された
+
+### 工藤遥（kudo-haruka）
+
+- 研修生加入日：2010-03-27
+  - ハロプロエッグの新メンバーとして初お披露目された「2010 ハロー！プロジェクト新人公演 3月 〜横浜GOLD!〜」の日（横浜BLITZ）
+    - [ナタリーの記事（2010-05-01）](https://natalie.mu/music/news/31352)に「今年3月の『ハロー！プロジェクト新人公演』にて初お披露目された工藤遥」とある
+    - [当時の公式サイトの公演案内のスナップショット](https://web.archive.org/web/20100301200543/http://www.helloproject.com:80/event/1002101915_live_egg.html)により、3月の新人公演は3月27日の1日だけの開催
+    - [Wikipedia「ハロプロ研修生」](https://ja.wikipedia.org/wiki/%E3%83%8F%E3%83%AD%E3%83%97%E3%83%AD%E7%A0%94%E4%BF%AE%E7%94%9F)に、この公演で工藤遥・長澤和奏・木沢留那がハロプロエッグのメンバーとなることが発表されたとある
+  - 参考：Wikipediaでは「2010年1月ごろ、ハロプロエッグに加入」。出典は『Top Yell』2012年6月号で、一次資料は未確認
+- モーニング娘。加入日：2011-09-29
+  - [公式プロフィールのスナップショット（2017-12-11）](https://web.archive.org/web/20171211115726/http://helloproject.com/morningmusume/profile/haruka_kudou/)のハロー！プロジェクト加入日（モーニング娘。加入日）
+  - [モーニング娘。10期加入の公式ニュース](https://helloproject.com/news/1204/)は2011-09-30。ハロプロエッグとして紹介されている
+  - 参考：[オリコンの記事](https://www.oricon.co.jp/news/2002254/full/)
+- グループ卒業日：2017-12-11
+  - 卒業公演「モーニング娘。誕生20周年記念コンサートツアー2017秋〜We are MORNING MUSUME。〜工藤遥卒業スペシャル」の日（日本武道館）。モーニング娘。と同時にH!Pも卒業
+    - [卒業スペシャル 12/11日本武道館公演のチケット追加販売の公式ニュース](https://helloproject.com/news/7860/)
+    - [卒業公演後の本人の最後のブログ](https://ameblo.jp/morningmusume-10ki/entry-12335668563.html)（2017-12-12未明）
+  - 参考：[卒業に関する公式ニュース](https://helloproject.com/news/6849/)は2017-04-29。秋ツアーをもって卒業すると発表された
+
 ### 小田さくら（oda-sakura）
 
 - 研修生加入日：2011-10-01（暫定）
