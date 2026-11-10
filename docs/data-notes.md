@@ -10,6 +10,51 @@
 
 ## モーニング娘。
 
+### 譜久村聖（fukumura-mizuki）
+
+- 研修生加入日：2008-06-22
+  - 「2008 ハロー!プロジェクト新人公演6月 〜赤坂HOP!〜」でハロプロエッグとして紹介された日
+    - [本人のブログ「10周年☆」（2018-06-22）](https://ameblo.jp/morningmusume-9ki/entry-12385665754.html)に「6月22日は 譜久村聖がハロプロエッグとしてご挨拶した日」「ハロー！在籍10周年を迎えました」とある
+    - [Wikipedia](https://ja.wikipedia.org/wiki/%E8%AD%9C%E4%B9%85%E6%9D%91%E8%81%96)
+- モーニング娘。加入日：2011-01-02
+  - [公式プロフィールのスナップショット（2023-11-29）](https://web.archive.org/web/20231129152115/http://www.helloproject.com/morningmusume/profile/mizuki_fukumura/)のハロー！プロジェクト加入日（モーニング娘。加入日）
+  - 「Hello! Project 2011 WINTER」（中野サンプラザ）でモーニング娘。9期として発表された日
+- グループ卒業日：2023-11-29
+  - 卒業公演「モーニング娘。'23 コンサートツアー秋『Neverending Shine Show 〜聖域〜』譜久村聖 卒業スペシャル」の日（横浜アリーナ）。モーニング娘。と同時にH!Pも卒業
+    - [Wikipedia](https://ja.wikipedia.org/wiki/%E8%AD%9C%E4%B9%85%E6%9D%91%E8%81%96)
+    - [卒業公演後の本人の最後のブログ](https://ameblo.jp/morningmusume-9ki/entry-12830642501.html)（2023-11-30未明）
+
+### 生田衣梨奈（ikuta-erina）
+
+- モーニング娘。加入日：2011-01-02
+  - [公式プロフィールのスナップショット（2025-06-24）](https://web.archive.org/web/20250624155906/https://www.helloproject.com/morningmusume/profile/erina_ikuta/)のハロー！プロジェクト加入日（モーニング娘。加入日）
+- グループ卒業日：2025-07-08
+  - 卒業公演「モーニング娘。'25 コンサートツアー春 Mighty Magic DX〜生田衣梨奈を見送って〜」の日（日本武道館）。モーニング娘。と同時にH!Pも卒業
+    - [Wikipedia](https://ja.wikipedia.org/wiki/%E7%94%9F%E7%94%B0%E8%A1%A3%E6%A2%A8%E5%A5%88)
+    - [卒業公演後の本人の最後のブログ](https://ameblo.jp/morningmusume-9ki/entry-12915370996.html)（2025-07-08）
+
+### 鞘師里保（sayashi-riho）
+
+- モーニング娘。加入日：2011-01-02
+  - [公式プロフィールのスナップショット（2015-12-06）](https://web.archive.org/web/20151206204530/http://www.helloproject.com:80/morningmusume/profile/riho_sayashi)のハロー！プロジェクト加入日
+- グループ卒業日：2015-12-31
+  - 卒業公演「Hello! Project COUNTDOWN PARTY 2015 〜GOOD BYE & HELLO〜」の日（中野サンプラザ）
+    - [Wikipedia](https://ja.wikipedia.org/wiki/%E9%9E%98%E5%B8%AB%E9%87%8C%E4%BF%9D)
+    - [卒業公演後の本人の最後のブログ](https://ameblo.jp/morningmusume-9ki/entry-12112462917.html)（2015-12-31）
+- H!P卒業日（明示値）：2018-11-30
+  - モーニング娘。卒業後もH!Pに在籍し、事務所との専属マネージメント契約の終了と同時にH!Pを卒業した。グループ在籍からはH!P卒業日を導出できない
+    - [鞘師里保に関するお知らせ（2018-12-07）](https://helloproject.com/news/9630/)に「11月末日をもって弊社との専属マネージメント契約を終了いたしました。同時にハロー！プロジェクトも卒業となります」とある
+  - 参考：2019-03-30の「ひなフェス」へのゲスト出演は、H!P卒業後のためH!P在籍に含めない
+
+### 鈴木香音（suzuki-kanon）
+
+- モーニング娘。加入日：2011-01-02
+  - [公式プロフィールのスナップショット（2016-05-31）](https://web.archive.org/web/20160531154428/http://www.helloproject.com/morningmusume/profile/kanonn_suzuki/)のハロー！プロジェクト加入日
+- グループ卒業日：2016-05-31
+  - 卒業公演「モーニング娘。'16 コンサートツアー春〜EMOTION IN MOTION〜」ファイナルの日（日本武道館）。モーニング娘。と同時にH!Pも卒業
+    - [Wikipedia](https://ja.wikipedia.org/wiki/%E9%88%B4%E6%9C%A8%E9%A6%99%E9%9F%B3)
+    - [卒業公演後の本人の最後のブログ](https://ameblo.jp/morningmusume-9ki/entry-12166108646.html)（2016-05-31）
+
 ### 飯窪春菜（iikubo-haruna）
 
 - モーニング娘。加入日：2011-09-29
