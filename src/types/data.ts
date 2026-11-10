@@ -3,6 +3,7 @@ export type Member = {
   name: string
   birthday: string
   helloProjectStartedAt?: string
+  helloProjectEndedAt?: string
 }
 
 export type Group = {

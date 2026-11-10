@@ -14,9 +14,9 @@ export function getHelloProjectMembershipPeriod(
     .reduce((earliestStartedAt, date) => (date < earliestStartedAt ? date : earliestStartedAt))
 
   const endedAts = memberships.map((entry) => entry.endedAt)
-  const endedAt = endedAts.every((date) => date !== null)
+  const endedAt = member.helloProjectEndedAt ?? (endedAts.every((date) => date !== null)
     ? endedAts.reduce((latestEndedAt, date) => (date > latestEndedAt ? date : latestEndedAt))
-    : null
+    : null)
 
   return { startedAt, endedAt }
 }

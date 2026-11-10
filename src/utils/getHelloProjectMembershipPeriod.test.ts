@@ -35,6 +35,14 @@ describe("getHelloProjectMembershipPeriod", () => {
     )).toEqual({ startedAt: "2010-01-01", endedAt: "2020-01-12" })
   })
 
+  test("H!P卒業日の明示値があればグループ在籍より優先する", () => {
+    expect(getHelloProjectMembershipPeriod(
+      { ...member, helloProjectEndedAt: "2020-02-01" },
+      groupMemberships,
+      [],
+    )).toEqual({ startedAt: "2020-01-01", endedAt: "2020-02-01" })
+  })
+
   test("現役のグループ在籍が一つでもあれば卒業日はnullになる", () => {
     expect(getHelloProjectMembershipPeriod(member, [{ ...groupMemberships[0], endedAt: null }, groupMemberships[1]], [])?.endedAt).toBeNull()
   })
