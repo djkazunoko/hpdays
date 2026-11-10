@@ -39,6 +39,8 @@
 - ハロプロ研修生、ハロプロエッグ、ハロー！プロジェクト・キッズ、ハロプロ研修生北海道は、同じ「研修生」として扱い、種類を示すデータは保持しない。
 - 研修生期間の終了日は、最初のグループ加入日から導出し、JSONには保持しない。過去グループを経由した人や、グループ在籍の後に研修生になった人は正しく導出できないが、研修生期間を使う機能を作る時点で対応する。
 - 日付は、日まで確認できる場合は `YYYY-MM-DD`、月までの場合は `YYYY-MM` で保持し、不明な日を補完しない。
+- `YYYY-MM` を許容するのは研修生加入日とHello! Project加入日の明示値だけとし、グループ加入日・卒業日とHello! Project卒業日の明示値は `YYYY-MM-DD` とする。卒業日が月までしか分からない場合の計算方法は、該当者が出た時点で検討する。
+- 各メンバーの日付の判断根拠と出典は、JSONにコメントを書けないため `docs/data-notes.md` に人物ごとに記録する。
 - 脱退・活動終了・契約解除は区別せず、卒業と同じく終了日として扱う。終わり方の種類は保持しない。
 - ファーストリリースではメンバーカラーを使用しない。
 - 期・世代は使用する機能が決まるまで追加しない。必要になった場合、グループの期は `GroupMembership` に保持する。
@@ -46,11 +48,14 @@
 参照：[Issue #2のデータ構成](https://github.com/djkazunoko/hpdays/issues/2#issuecomment-5595104572)、
 [研修生期間の終了日](https://github.com/djkazunoko/hpdays/issues/2#issuecomment-5595313092)、
 [Issue #12の検討結果](https://github.com/djkazunoko/hpdays/issues/12#issuecomment-5652131242)、
-[Issue #21の決定事項](https://github.com/djkazunoko/hpdays/issues/21#issuecomment-6595817335)
+[Issue #21の決定事項](https://github.com/djkazunoko/hpdays/issues/21#issuecomment-6595817335)、
+[PR #31](https://github.com/djkazunoko/hpdays/pull/31)
 
 ### 在籍期間・日数・順位
 
 - 在籍日数は加入日を1日目として、加入日と終了日の両方を含めて計算する。現役メンバーは現在日を終了日として計算する。
+- Hello! Project在籍は、公式にHello! Projectの一員として扱われている期間とする。所属事務所や、M-lineなどHello! Project卒業後の活動の枠への所属では判断しない。
+- Hello! Projectの卒業日は、公式の「ハロー！プロジェクトを卒業」という告知で判断する。グループ卒業と同時に告知されていればグループ卒業日と同じ日になる。
 - Hello! Project加入日・卒業日は、`members.json` に保持している場合はその値を使い、保持していない場合は以下のとおり導出する。
 - Hello! Project加入日は、研修生加入日と最も古いグループ加入日の早い方とする。
 - Hello! Project卒業日は、卒業済みメンバーでは最も遅いグループ卒業日から導出する。現役のグループ在籍があれば現役として扱う。
@@ -65,7 +70,8 @@
 [Issue #15](https://github.com/djkazunoko/hpdays/issues/15)、
 [PR #16](https://github.com/djkazunoko/hpdays/pull/16)、
 [Issue #6](https://github.com/djkazunoko/hpdays/issues/6)、
-[Issue #21の決定事項](https://github.com/djkazunoko/hpdays/issues/21#issuecomment-6595817335)
+[Issue #21の決定事項](https://github.com/djkazunoko/hpdays/issues/21#issuecomment-6595817335)、
+[Hello! Project在籍の定義](https://github.com/djkazunoko/hpdays/issues/25#issuecomment-6768120557)
 
 ## URL設計
 
