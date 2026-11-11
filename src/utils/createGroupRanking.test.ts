@@ -25,19 +25,19 @@ describe("createGroupRanking", () => {
     const memberships: GroupMembership[] = [
       {
         memberId: "oda-sakura",
-        groupId: "morning-musume",
+        groupId: "morningmusume",
         startedAt: "2012-09-14",
         endedAt: null,
       },
       {
         memberId: "fukumura-mizuki",
-        groupId: "morning-musume",
+        groupId: "morningmusume",
         startedAt: "2011-01-02",
         endedAt: "2023-11-29",
       },
       {
         memberId: "ikuta-erina",
-        groupId: "morning-musume",
+        groupId: "morningmusume",
         startedAt: "2011-01-02",
         endedAt: "2025-07-08",
       },
@@ -45,7 +45,7 @@ describe("createGroupRanking", () => {
 
     const currentDate = new Date(2026, 8, 10)
 
-    const ranking = createGroupRanking("morning-musume", members, memberships, currentDate)
+    const ranking = createGroupRanking("morningmusume", members, memberships, currentDate)
 
     expect(ranking.map((entry) => entry.member.id)).toEqual([
       "ikuta-erina",
@@ -66,13 +66,13 @@ describe("createGroupRanking", () => {
     const memberships: GroupMembership[] = [
       {
         memberId: "oda-sakura",
-        groupId: "morning-musume",
+        groupId: "morningmusume",
         startedAt: "2012-09-14",
         endedAt: null,
       },
     ]
 
-    const ranking = createGroupRanking("morning-musume", [member], memberships, new Date(2012, 8, 15))
+    const ranking = createGroupRanking("morningmusume", [member], memberships, new Date(2012, 8, 15))
 
     expect(ranking).toEqual([
       {
@@ -101,7 +101,7 @@ describe("createGroupRanking", () => {
     const memberships: GroupMembership[] = [
       {
         memberId: "oda-sakura",
-        groupId: "morning-musume",
+        groupId: "morningmusume",
         startedAt: "2012-09-14",
         endedAt: null,
       },
@@ -113,7 +113,7 @@ describe("createGroupRanking", () => {
       },
     ]
 
-    const ranking = createGroupRanking("morning-musume", members, memberships)
+    const ranking = createGroupRanking("morningmusume", members, memberships)
 
     expect(ranking.map((entry) => entry.member.id)).toEqual(["oda-sakura"])
   })
@@ -130,13 +130,13 @@ describe("createGroupRanking", () => {
     const memberships: GroupMembership[] = [
       {
         memberId: "ikuta-erina",
-        groupId: "morning-musume",
+        groupId: "morningmusume",
         startedAt: "2011-01-02",
         endedAt: "2025-07-08",
       },
     ]
 
-    expect(() => createGroupRanking("morning-musume", members, memberships)).toThrow(
+    expect(() => createGroupRanking("morningmusume", members, memberships)).toThrow(
       "Member not found: ikuta-erina",
     )
   })

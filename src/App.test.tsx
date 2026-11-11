@@ -29,7 +29,7 @@ describe("App", () => {
   })
 
   test.each([
-    { groupId: "morning-musume", groupName: "モーニング娘。" },
+    { groupId: "morningmusume", groupName: "モーニング娘。" },
     { groupId: "rosychronicle", groupName: "ロージークロニクル" },
   ])("/rankings/$groupIdでそのグループに在籍した全メンバーの在籍日数ランキングを表示する", ({ groupId, groupName }) => {
     render(
