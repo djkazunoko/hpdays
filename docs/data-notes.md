@@ -273,3 +273,80 @@
   - [公式プロフィール](https://helloproject.com/morningmusume/hanano_ishikawa/)のモーニング娘。加入日
   - [モーニング娘。18期3人の加入のお知らせ](https://helloproject.com/news/20505/)
   - 参考：[加入発表の動画](https://youtu.be/r2pGrST2FFg)は2026-05-28
+
+## ロージークロニクル
+
+グループ加入日は全員2024-06-16とした。公式プロフィールでは全員の「ハロー！プロジェクト加入」が「2024年6月16日 (ロージークロニクル結成日)」となっている。
+「Hello! Project 研修生発表会 2024 6月『リリー』」（Zepp DiverCity）で、グループ名と島川波菜・相馬優芽の加入が発表された日。
+
+- 参考：[Wikipedia](https://ja.wikipedia.org/wiki/%E3%83%AD%E3%83%BC%E3%82%B8%E3%83%BC%E3%82%AF%E3%83%AD%E3%83%8B%E3%82%AF%E3%83%AB)に「この日をグループ結成日、メンバー全員のハロー!プロジェクト加入日としている」とある
+- 参考：島川波菜・相馬優芽を除く7人は、[2023-05-23の公式ニュース](https://helloproject.com/news/15959/)で、ハロプロ研修生ユニット'23として2024年に新グループでデビューすることが発表されていた。ハロプロ研修生ユニットは研修生として扱うため、この日はグループ加入日としない
+- 要確認：松原ユリヤ以外の研修生加入日は、[Wikipedia「ハロプロ研修生」](https://ja.wikipedia.org/wiki/%E3%83%8F%E3%83%AD%E3%83%97%E3%83%AD%E7%A0%94%E4%BF%AE%E7%94%9F)と、その出典の公式ニュースによる発表日とした。公式発表の加入日や、本人のブログでの加入記念日は未確認
+
+### 橋田歩果（hashida-honoka）
+
+- 研修生加入日：2019-08-02
+  - [研修生加入の発表](https://helloproject.com/news/10744/)
+  - [Wikipedia](https://ja.wikipedia.org/wiki/%E6%A9%8B%E7%94%B0%E6%AD%A9%E6%9E%9C)
+- ロージークロニクル加入日：2024-06-16
+  - [公式プロフィール](https://helloproject.com/rosychronicle/honoka_hashida/)のハロー！プロジェクト加入日（ロージークロニクル結成日）
+
+### 吉田姫杷（yoshida-hinoha）
+
+- 研修生加入日：2021-08-24
+  - [研修生加入の発表](https://helloproject.com/news/13490/)
+- ロージークロニクル加入日：2024-06-16
+  - [公式プロフィール](https://helloproject.com/rosychronicle/hinoha_yoshida/)のハロー！プロジェクト加入日（ロージークロニクル結成日）
+- 参考：[2023-05-23の公式ニュース](https://helloproject.com/news/15959/)で、ハロプロ研修生ユニット'23への加入が発表された
+
+### 小野田華凜（onoda-karin）
+
+- 研修生加入日：2018-11-01
+  - [研修生加入の発表](https://helloproject.com/news/9463/)
+- ロージークロニクル加入日：2024-06-16
+  - [公式プロフィール](https://helloproject.com/rosychronicle/karin_onoda/)のハロー！プロジェクト加入日（ロージークロニクル結成日）
+
+### 村越彩菜（murakoshi-ayana）
+
+- 研修生加入日：2019-08-02
+  - [研修生加入の発表](https://helloproject.com/news/10744/)
+- ロージークロニクル加入日：2024-06-16
+  - [公式プロフィール](https://helloproject.com/rosychronicle/ayana_murakoshi/)のハロー！プロジェクト加入日（ロージークロニクル結成日）
+
+### 植村葉純（uemura-hasumi）
+
+- 研修生加入日：2019-08-02
+  - [研修生加入の発表](https://helloproject.com/news/10744/)
+- ロージークロニクル加入日：2024-06-16
+  - [公式プロフィール](https://helloproject.com/rosychronicle/hasumi_uemura/)のハロー！プロジェクト加入日（ロージークロニクル結成日）
+
+### 松原ユリヤ（matsubara-yulia）
+
+- 研修生加入日：2017-12-10
+  - 「Hello! Project 研修生発表会 2017 12月 〜Conti→New!〜」東京公演（Zepp Tokyo）で、同期の7人がお披露目された日
+    - [本人のブログ「加入して7周年！！」（2024-12-10）](https://ameblo.jp/rosychronicle/entry-12878098421.html)に「今日12月10日でハロプロ研修生に加入して、7周年を迎えました」「2017年12月10日のハロプロ研修生発表会の東京公演、同期７人一緒にZepp Tokyoのステージに上がりました」とある
+    - [研修生加入の公式ニュース](https://helloproject.com/news/7928/)（2017-12-11）に、新メンバー7人が12/10の東京公演に出演したとある
+- ロージークロニクル加入日：2024-06-16
+  - [公式プロフィール](https://helloproject.com/rosychronicle/yulia_matsubara/)のハロー！プロジェクト加入日（ロージークロニクル結成日）
+
+### 島川波菜（shimakawa-hana）
+
+- 研修生加入日：2024-02-07
+  - [研修生加入の発表](https://helloproject.com/news/16974/)
+- ロージークロニクル加入日：2024-06-16
+  - [公式プロフィール](https://helloproject.com/rosychronicle/hana_shimakawa/)のハロー！プロジェクト加入日（ロージークロニクル結成日）
+
+### 上村麗菜（kamimura-rena）
+
+- 研修生加入日：2022-08-09
+  - [研修生加入の発表](https://helloproject.com/news/14926/)
+- ロージークロニクル加入日：2024-06-16
+  - [公式プロフィール](https://helloproject.com/rosychronicle/rena_kamimura/)のハロー！プロジェクト加入日（ロージークロニクル結成日）
+- 参考：[2023-05-23の公式ニュース](https://helloproject.com/news/15959/)で、ハロプロ研修生ユニット'23への加入が発表された
+
+### 相馬優芽（soma-yume）
+
+- 研修生加入日：2024-02-07
+  - [研修生加入の発表](https://helloproject.com/news/16974/)
+- ロージークロニクル加入日：2024-06-16
+  - [公式プロフィール](https://helloproject.com/rosychronicle/yume_soma/)のハロー！プロジェクト加入日（ロージークロニクル結成日）

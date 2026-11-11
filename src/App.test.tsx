@@ -28,16 +28,19 @@ describe("App", () => {
     expect(getRowMemberNames()).toEqual(getMemberNames([...new Set(groupMemberships.map((membership) => membership.memberId))]))
   })
 
-  test("/rankings/:groupIdでそのグループに在籍した全メンバーの在籍日数ランキングを表示する", () => {
+  test.each([
+    { groupId: "morning-musume", groupName: "モーニング娘。" },
+    { groupId: "rosychronicle", groupName: "ロージークロニクル" },
+  ])("/rankings/$groupIdでそのグループに在籍した全メンバーの在籍日数ランキングを表示する", ({ groupId, groupName }) => {
     render(
-      <MemoryRouter initialEntries={["/rankings/morning-musume"]}>
+      <MemoryRouter initialEntries={[`/rankings/${groupId}`]}>
         <App />
       </MemoryRouter>,
     )
 
-    expect(screen.getByRole("heading", { name: "モーニング娘。 在籍日数ランキング" })).toBeDefined()
+    expect(screen.getByRole("heading", { name: `${groupName} 在籍日数ランキング` })).toBeDefined()
     expect(getRowMemberNames()).toEqual(getMemberNames(
-      groupMemberships.filter((membership) => membership.groupId === "morning-musume").map((membership) => membership.memberId),
+      groupMemberships.filter((membership) => membership.groupId === groupId).map((membership) => membership.memberId),
     ))
   })
 
