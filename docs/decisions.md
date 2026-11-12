@@ -35,6 +35,8 @@
 - ファーストリリースの掲載対象は、現役グループに在籍したことがある人とする。サブメンバーも在籍とみなす。
 - `groups.json` には現役グループだけを保持する。ユニット、シャッフルユニット、期間限定・企画ユニット、活動を終了した過去グループは保持しない。
 - 改名したグループは同じグループとして扱い、現在の名前を使う。
+- グループIDは、公式サイトのURLのパスに合わせる（例：`helloproject.com/morningmusume/` → `morningmusume`）。公式のSNSアカウントはサービスごとに表記が異なるが、公式サイトのパスは全グループで区切りなしの表記に統一されている。
+- メンバーIDは `姓-名` の形式とし、ローマ字は公式プロフィールの表記に倣う（例：松原ユリヤは `matsubara-yulia`）。ヘボン式などの規則で機械的に決めない。
 - 研修生歴とグループ在籍からHello! Project加入日・卒業日を導出できない人に限り、その日付を `members.json` に保持する。過去グループの追加などで導出できるようになった場合は削除する。
 - ハロプロ研修生、ハロプロエッグ、ハロー！プロジェクト・キッズ、ハロプロ研修生北海道は、同じ「研修生」として扱い、種類を示すデータは保持しない。
 - 研修生期間の終了日は、最初のグループ加入日から導出し、JSONには保持しない。過去グループを経由した人や、グループ在籍の後に研修生になった人は正しく導出できないが、研修生期間を使う機能を作る時点で対応する。
@@ -49,7 +51,8 @@
 [研修生期間の終了日](https://github.com/djkazunoko/hpdays/issues/2#issuecomment-5595313092)、
 [Issue #12の検討結果](https://github.com/djkazunoko/hpdays/issues/12#issuecomment-5652131242)、
 [Issue #21の決定事項](https://github.com/djkazunoko/hpdays/issues/21#issuecomment-6595817335)、
-[PR #31](https://github.com/djkazunoko/hpdays/pull/31)
+[PR #31](https://github.com/djkazunoko/hpdays/pull/31)、
+[PR #37](https://github.com/djkazunoko/hpdays/pull/37)
 
 ### 在籍期間・日数・順位
 
