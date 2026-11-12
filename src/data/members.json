@@ -130,5 +130,50 @@
     "id": "ishikawa-hanano",
     "name": "石川華望",
     "birthday": "2013-09-09"
+  },
+  {
+    "id": "hashida-honoka",
+    "name": "橋田歩果",
+    "birthday": "2005-10-17"
+  },
+  {
+    "id": "yoshida-hinoha",
+    "name": "吉田姫杷",
+    "birthday": "2007-07-08"
+  },
+  {
+    "id": "onoda-karin",
+    "name": "小野田華凜",
+    "birthday": "2008-01-23"
+  },
+  {
+    "id": "murakoshi-ayana",
+    "name": "村越彩菜",
+    "birthday": "2008-02-11"
+  },
+  {
+    "id": "uemura-hasumi",
+    "name": "植村葉純",
+    "birthday": "2008-02-25"
+  },
+  {
+    "id": "matsubara-yulia",
+    "name": "松原ユリヤ",
+    "birthday": "2008-02-26"
+  },
+  {
+    "id": "shimakawa-hana",
+    "name": "島川波菜",
+    "birthday": "2008-04-18"
+  },
+  {
+    "id": "kamimura-rena",
+    "name": "上村麗菜",
+    "birthday": "2009-06-15"
+  },
+  {
+    "id": "soma-yume",
+    "name": "相馬優芽",
+    "birthday": "2011-02-04"
   }
 ]
