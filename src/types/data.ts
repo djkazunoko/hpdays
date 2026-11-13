@@ -34,3 +34,5 @@ export type MembershipPeriod = {
   startedAt: string
   endedAt: string | null
 }
+
+export type MembershipStatusFilter = "all" | "active" | "graduated"

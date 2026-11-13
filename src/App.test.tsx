@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, render, screen, within } from "@testing-library/react"
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react"
 import { MemoryRouter } from "react-router"
 import { afterEach, describe, expect, test } from "vitest"
 import App from "./App"
@@ -41,6 +41,49 @@ describe("App", () => {
     expect(screen.getByRole("heading", { name: `${groupName} 在籍日数ランキング` })).toBeDefined()
     expect(getRowMemberNames()).toEqual(getMemberNames(
       groupMemberships.filter((membership) => membership.groupId === groupId).map((membership) => membership.memberId),
+    ))
+  })
+
+  test("/rankings?status=activeで現役メンバーだけのHello! Project在籍日数ランキングを表示する", () => {
+    render(
+      <MemoryRouter initialEntries={["/rankings?status=active"]}>
+        <App />
+      </MemoryRouter>,
+    )
+
+    expect(getRowMemberNames()).toEqual(getMemberNames([...new Set(
+      groupMemberships.filter((membership) => membership.endedAt === null).map((membership) => membership.memberId),
+    )]))
+  })
+
+  test("/rankings/:groupId?status=graduatedでそのグループを卒業したメンバーだけのランキングを表示する", () => {
+    render(
+      <MemoryRouter initialEntries={["/rankings/morningmusume?status=graduated"]}>
+        <App />
+      </MemoryRouter>,
+    )
+
+    expect(getRowMemberNames()).toEqual(getMemberNames(
+      groupMemberships
+        .filter((membership) => membership.groupId === "morningmusume" && membership.endedAt !== null)
+        .map((membership) => membership.memberId),
+    ))
+  })
+
+  test("絞り込みのリンクを選ぶと、同じグループのランキングを絞り込んで表示する", () => {
+    render(
+      <MemoryRouter initialEntries={["/rankings/morningmusume"]}>
+        <App />
+      </MemoryRouter>,
+    )
+
+    fireEvent.click(screen.getByRole("link", { name: "現役" }))
+
+    expect(screen.getByRole("heading", { name: "モーニング娘。 在籍日数ランキング" })).toBeDefined()
+    expect(getRowMemberNames()).toEqual(getMemberNames(
+      groupMemberships
+        .filter((membership) => membership.groupId === "morningmusume" && membership.endedAt === null)
+        .map((membership) => membership.memberId),
     ))
   })
 
