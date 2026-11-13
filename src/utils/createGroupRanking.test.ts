@@ -6,9 +6,9 @@ describe("createGroupRanking", () => {
   test("在籍日数の長い順にランキングを作成する", () => {
     const members: Member[] = [
       {
-        id: "oda-sakura",
-        name: "小田さくら",
-        birthday: "1999-03-12",
+        id: "sugihara-meisa",
+        name: "杉原明紗",
+        birthday: "2011-12-20",
       },
       {
         id: "fukumura-mizuki",
@@ -24,9 +24,9 @@ describe("createGroupRanking", () => {
 
     const memberships: GroupMembership[] = [
       {
-        memberId: "oda-sakura",
+        memberId: "sugihara-meisa",
         groupId: "morningmusume",
-        startedAt: "2012-09-14",
+        startedAt: "2026-03-21",
         endedAt: null,
       },
       {
@@ -49,8 +49,8 @@ describe("createGroupRanking", () => {
 
     expect(ranking.map((entry) => entry.member.id)).toEqual([
       "ikuta-erina",
-      "oda-sakura",
       "fukumura-mizuki",
+      "sugihara-meisa",
     ])
 
     expect(ranking.map((entry) => entry.rank)).toEqual([1, 2, 3])
@@ -58,21 +58,21 @@ describe("createGroupRanking", () => {
 
   test("在籍日数が最小在籍日数かどうかを含める", () => {
     const member: Member = {
-      id: "oda-sakura",
-      name: "小田さくら",
-      birthday: "1999-03-12",
+      id: "sugihara-meisa",
+      name: "杉原明紗",
+      birthday: "2011-12-20",
     }
 
     const memberships: GroupMembership[] = [
       {
-        memberId: "oda-sakura",
+        memberId: "sugihara-meisa",
         groupId: "morningmusume",
-        startedAt: "2012-09-14",
+        startedAt: "2026-03-21",
         endedAt: null,
       },
     ]
 
-    const ranking = createGroupRanking("morningmusume", [member], memberships, "all", new Date(2012, 8, 15))
+    const ranking = createGroupRanking("morningmusume", [member], memberships, "all", new Date(2026, 2, 22))
 
     expect(ranking).toEqual([
       {
@@ -87,9 +87,9 @@ describe("createGroupRanking", () => {
   test("指定したグループの在籍データだけでランキングを作成する", () => {
     const members: Member[] = [
       {
-        id: "oda-sakura",
-        name: "小田さくら",
-        birthday: "1999-03-12",
+        id: "sugihara-meisa",
+        name: "杉原明紗",
+        birthday: "2011-12-20",
       },
       {
         id: "other-group-member",
@@ -100,9 +100,9 @@ describe("createGroupRanking", () => {
 
     const memberships: GroupMembership[] = [
       {
-        memberId: "oda-sakura",
+        memberId: "sugihara-meisa",
         groupId: "morningmusume",
-        startedAt: "2012-09-14",
+        startedAt: "2026-03-21",
         endedAt: null,
       },
       {
@@ -115,7 +115,7 @@ describe("createGroupRanking", () => {
 
     const ranking = createGroupRanking("morningmusume", members, memberships, "all")
 
-    expect(ranking.map((entry) => entry.member.id)).toEqual(["oda-sakura"])
+    expect(ranking.map((entry) => entry.member.id)).toEqual(["sugihara-meisa"])
   })
 
   test("グループ在籍データに対応するメンバーが存在しない場合はエラーになる", () => {
