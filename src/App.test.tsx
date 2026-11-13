@@ -31,7 +31,7 @@ describe("App", () => {
   test.each([
     { groupId: "morningmusume", groupName: "モーニング娘。" },
     { groupId: "rosychronicle", groupName: "ロージークロニクル" },
-  ])("/rankings/$groupIdでそのグループに在籍した全メンバーの在籍日数ランキングを表示する", ({ groupId, groupName }) => {
+  ])("/rankings/$groupId でそのグループに在籍した全メンバーの在籍日数ランキングを表示する", ({ groupId, groupName }) => {
     render(
       <MemoryRouter initialEntries={[`/rankings/${groupId}`]}>
         <App />
