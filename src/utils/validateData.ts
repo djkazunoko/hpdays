@@ -72,8 +72,8 @@ export function validateData({ members, groups, groupMemberships, traineeMembers
     }
   }
 
-  for (const membership of groupMemberships) {
-    const { memberId, groupId, startedAt, endedAt } = membership
+  for (const groupMembership of groupMemberships) {
+    const { memberId, groupId, startedAt, endedAt } = groupMembership
 
     if (!memberIds.has(memberId)) {
       errors.push(`Member not found in group-memberships: ${memberId}`)
@@ -99,7 +99,7 @@ export function validateData({ members, groups, groupMemberships, traineeMembers
     errors.push(`Duplicate group membership: ${key}`)
   }
 
-  for (const id of findDuplicates(traineeMemberships.map((trainee) => trainee.memberId))) {
+  for (const id of findDuplicates(traineeMemberships.map((traineeMembership) => traineeMembership.memberId))) {
     errors.push(`Duplicate trainee membership: ${id}`)
   }
 
@@ -111,7 +111,7 @@ export function validateData({ members, groups, groupMemberships, traineeMembers
       errors.push(`Invalid trainee membership startedAt: ${memberId} ${startedAt}`)
     }
     // 研修生のみで活動を終了した人は掲載対象としないため、グループ在籍が必要。
-    if (!groupMemberships.some((membership) => membership.memberId === memberId)) {
+    if (!groupMemberships.some((groupMembership) => groupMembership.memberId === memberId)) {
       errors.push(`Group membership not found for trainee: ${memberId}`)
     }
   }

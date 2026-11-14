@@ -11,18 +11,18 @@ function toUtcTimestamp(date: string): number {
 }
 
 export function calculateMembershipDays(
-  membership: MembershipPeriod,
+  membershipPeriod: MembershipPeriod,
   currentDate = new Date(),
 ): number {
-  const startedAt = toUtcTimestamp(membership.startedAt)
+  const startTimestamp = toUtcTimestamp(membershipPeriod.startedAt)
 
-  const endedAt = membership.endedAt
-    ? toUtcTimestamp(membership.endedAt)
+  const endTimestamp = membershipPeriod.endedAt
+    ? toUtcTimestamp(membershipPeriod.endedAt)
     : Date.UTC(
         currentDate.getFullYear(),
         currentDate.getMonth(),
         currentDate.getDate(),
       )
 
-  return Math.floor((endedAt - startedAt) / MILLISECONDS_PER_DAY) + 1
+  return Math.floor((endTimestamp - startTimestamp) / MILLISECONDS_PER_DAY) + 1
 }

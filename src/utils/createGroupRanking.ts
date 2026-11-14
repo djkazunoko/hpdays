@@ -1,25 +1,29 @@
-import type { GroupMembership, Member, RankingEntry } from "../types/data"
+import type { GroupMembership, Member, MembershipStatusFilter, RankingEntry } from "../types/data"
 import { calculateMembershipDays } from "./calculateMembershipDays"
 import { isMinimumMembershipDays } from "./isMinimumMembershipDays"
+import { matchesMembershipStatusFilter } from "./matchesMembershipStatusFilter"
 import { rankByMembershipDays } from "./rankByMembershipDays"
 
 export function createGroupRanking(
   groupId: string,
   members: Member[],
   groupMemberships: GroupMembership[],
+  membershipStatusFilter: MembershipStatusFilter,
   currentDate = new Date(),
 ): RankingEntry[] {
-  const memberships = groupMemberships.filter((membership) => membership.groupId === groupId)
-  const entries = memberships.map((membership) => {
-    const member = members.find((entry) => entry.id === membership.memberId)
-    if (!member) throw new Error(`Member not found: ${membership.memberId}`)
+  const targetGroupMemberships = groupMemberships.filter((groupMembership) =>
+    groupMembership.groupId === groupId && matchesMembershipStatusFilter(groupMembership, membershipStatusFilter),
+  )
+  const unrankedEntries = targetGroupMemberships.map((groupMembership) => {
+    const member = members.find((member) => member.id === groupMembership.memberId)
+    if (!member) throw new Error(`Member not found: ${groupMembership.memberId}`)
 
     return {
       member,
-      membershipDays: calculateMembershipDays(membership, currentDate),
-      isMinimumMembershipDays: isMinimumMembershipDays(membership),
+      membershipDays: calculateMembershipDays(groupMembership, currentDate),
+      isMinimumMembershipDays: isMinimumMembershipDays(groupMembership),
     }
   })
 
-  return rankByMembershipDays(entries)
+  return rankByMembershipDays(unrankedEntries)
 }

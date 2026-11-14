@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Route, Routes, useParams } from 'react-router'
+import { Route, Routes, useParams, useSearchParams } from 'react-router'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
@@ -12,6 +12,7 @@ import { NotFoundPage } from './pages/NotFoundPage'
 import { RankingPage } from './pages/RankingPage'
 import { createGroupRanking } from './utils/createGroupRanking'
 import { createHelloProjectRanking } from './utils/createHelloProjectRanking'
+import { parseMembershipStatusFilter } from './utils/parseMembershipStatusFilter'
 
 function Home() {
   const [count, setCount] = useState(0)
@@ -128,26 +129,42 @@ function Home() {
   )
 }
 
+function useMembershipStatusFilter() {
+  const [searchParams] = useSearchParams()
+  return parseMembershipStatusFilter(searchParams.get('status'))
+}
+
+function HelloProjectRankingRoute() {
+  const membershipStatusFilter = useMembershipStatusFilter()
+
+  return (
+    <RankingPage
+      ranking={createHelloProjectRanking(members, groupMemberships, traineeMemberships, membershipStatusFilter)}
+      membershipStatusFilter={membershipStatusFilter}
+    />
+  )
+}
+
 function GroupRankingRoute() {
   const { groupId } = useParams()
+  const membershipStatusFilter = useMembershipStatusFilter()
   const group = groups.find((group) => group.id === groupId)
   if (!group) return <NotFoundPage />
 
-  return <RankingPage group={group} ranking={createGroupRanking(group.id, members, groupMemberships)} />
+  return (
+    <RankingPage
+      group={group}
+      ranking={createGroupRanking(group.id, members, groupMemberships, membershipStatusFilter)}
+      membershipStatusFilter={membershipStatusFilter}
+    />
+  )
 }
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route
-        path="/rankings"
-        element={
-          <RankingPage
-            ranking={createHelloProjectRanking(members, groupMemberships, traineeMemberships)}
-          />
-        }
-      />
+      <Route path="/rankings" element={<HelloProjectRankingRoute />} />
       <Route path="/rankings/:groupId" element={<GroupRankingRoute />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

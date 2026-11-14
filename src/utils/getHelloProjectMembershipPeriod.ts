@@ -5,15 +5,15 @@ export function getHelloProjectMembershipPeriod(
   groupMemberships: GroupMembership[],
   traineeMemberships: TraineeMembership[],
 ): MembershipPeriod | null {
-  const memberships = groupMemberships.filter((entry) => entry.memberId === member.id)
-  if (memberships.length === 0) return null
+  const groupMembershipsOfMember = groupMemberships.filter((groupMembership) => groupMembership.memberId === member.id)
+  if (groupMembershipsOfMember.length === 0) return null
 
-  const trainee = traineeMemberships.find((entry) => entry.memberId === member.id)
-  const startedAt = member.helloProjectStartedAt ?? trainee?.startedAt ?? memberships
-    .map((entry) => entry.startedAt)
+  const traineeMembership = traineeMemberships.find((traineeMembership) => traineeMembership.memberId === member.id)
+  const startedAt = member.helloProjectStartedAt ?? traineeMembership?.startedAt ?? groupMembershipsOfMember
+    .map((groupMembership) => groupMembership.startedAt)
     .reduce((earliestStartedAt, date) => (date < earliestStartedAt ? date : earliestStartedAt))
 
-  const endedAts = memberships.map((entry) => entry.endedAt)
+  const endedAts = groupMembershipsOfMember.map((groupMembership) => groupMembership.endedAt)
   const endedAt = member.helloProjectEndedAt ?? (endedAts.every((date) => date !== null)
     ? endedAts.reduce((latestEndedAt, date) => (date > latestEndedAt ? date : latestEndedAt))
     : null)
