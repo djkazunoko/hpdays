@@ -11,19 +11,19 @@ export function createGroupRanking(
   membershipStatusFilter: MembershipStatusFilter,
   currentDate = new Date(),
 ): RankingEntry[] {
-  const memberships = groupMemberships.filter((membership) =>
-    membership.groupId === groupId && matchesMembershipStatusFilter(membership, membershipStatusFilter),
+  const targetGroupMemberships = groupMemberships.filter((groupMembership) =>
+    groupMembership.groupId === groupId && matchesMembershipStatusFilter(groupMembership, membershipStatusFilter),
   )
-  const entries = memberships.map((membership) => {
-    const member = members.find((entry) => entry.id === membership.memberId)
-    if (!member) throw new Error(`Member not found: ${membership.memberId}`)
+  const unrankedEntries = targetGroupMemberships.map((groupMembership) => {
+    const member = members.find((member) => member.id === groupMembership.memberId)
+    if (!member) throw new Error(`Member not found: ${groupMembership.memberId}`)
 
     return {
       member,
-      membershipDays: calculateMembershipDays(membership, currentDate),
-      isMinimumMembershipDays: isMinimumMembershipDays(membership),
+      membershipDays: calculateMembershipDays(groupMembership, currentDate),
+      isMinimumMembershipDays: isMinimumMembershipDays(groupMembership),
     }
   })
 
-  return rankByMembershipDays(entries)
+  return rankByMembershipDays(unrankedEntries)
 }

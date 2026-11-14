@@ -12,11 +12,11 @@ export function createHelloProjectRanking(
   membershipStatusFilter: MembershipStatusFilter,
   currentDate = new Date(),
 ): RankingEntry[] {
-  const memberIds = [...new Set(groupMemberships.map((entry) => entry.memberId))]
-  const entries: Omit<RankingEntry, "rank">[] = []
+  const memberIds = [...new Set(groupMemberships.map((groupMembership) => groupMembership.memberId))]
+  const unrankedEntries: Omit<RankingEntry, "rank">[] = []
 
   for (const memberId of memberIds) {
-    const member = members.find((entry) => entry.id === memberId)
+    const member = members.find((member) => member.id === memberId)
     if (!member) throw new Error(`Member not found: ${memberId}`)
 
     // memberIdsはグループ在籍データから取得しているため、在籍期間は必ず存在する。
@@ -24,12 +24,12 @@ export function createHelloProjectRanking(
     // グループ在籍ではなくH!P在籍期間で判定するため、H!P卒業日の明示値も反映される。
     if (!matchesMembershipStatusFilter(membershipPeriod, membershipStatusFilter)) continue
 
-    entries.push({
+    unrankedEntries.push({
       member,
       membershipDays: calculateMembershipDays(membershipPeriod, currentDate),
       isMinimumMembershipDays: isMinimumMembershipDays(membershipPeriod),
     })
   }
 
-  return rankByMembershipDays(entries)
+  return rankByMembershipDays(unrankedEntries)
 }
