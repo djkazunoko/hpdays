@@ -2,6 +2,7 @@ export type Member = {
   id: string
   name: string
   birthday: string
+  // 研修生歴とグループ在籍から導出できない人だけが持つ。H!P在籍期間は getHelloProjectMembershipPeriod で求める。
   helloProjectStartedAt?: string
   helloProjectEndedAt?: string
 }
