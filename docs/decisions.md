@@ -68,13 +68,16 @@
 - ランキングは在籍日数の降順とし、月単位の加入日は最小在籍日数で比較する。
 - Hello! Project・グループの両ランキングで、同日数は同順位とし、次の順位は同順位の人数分を飛ばす（例：1、2、2、4位）。
 - 最小在籍日数は「○○日以上」と表示し、確認できる最小値であることが分かるようにする。
+- 現役・卒業済みは、卒業日の有無で判定する。Hello! Project全体のランキングではHello! Project在籍期間、グループ別のランキングではグループ在籍1件ごとに判定する。グループを卒業してHello! Projectに残っている人は、そのグループのランキングでは卒業済みとなる。
+- ランキングを現役・卒業済みで絞り込む場合は、絞り込んだ対象の中で順位を付け直す。
 
 参照：[Issue #4の数え方](https://github.com/djkazunoko/hpdays/issues/4#issuecomment-5596338412)、
 [Issue #15](https://github.com/djkazunoko/hpdays/issues/15)、
 [PR #16](https://github.com/djkazunoko/hpdays/pull/16)、
 [Issue #6](https://github.com/djkazunoko/hpdays/issues/6)、
 [Issue #21の決定事項](https://github.com/djkazunoko/hpdays/issues/21#issuecomment-6595817335)、
-[Hello! Project在籍の定義](https://github.com/djkazunoko/hpdays/issues/25#issuecomment-6768120557)
+[Hello! Project在籍の定義](https://github.com/djkazunoko/hpdays/issues/25#issuecomment-6768120557)、
+[PR #38](https://github.com/djkazunoko/hpdays/pull/38)
 
 ## URL設計
 
@@ -94,6 +97,7 @@
 - メンバー一覧の `/members` は作成しない。`/members` と存在しないメンバーIDへのアクセスは、存在しないページとして扱う。
 - `groups.json` に存在しないグループIDへのアクセスも、存在しないページとして扱う。存在しないページは、定義していないパスと同じくReact Routerで表示する。
 - 絞り込み、並び順、選択状態など、共有時に再現する価値のある表示条件はクエリパラメータで表す。具体的な名前・保持する状態は各機能の実装時に決める。
+- ランキングの現役・卒業済みの絞り込みは `status` クエリパラメータで表す（`?status=active`、`?status=graduated`）。パラメータがない場合は「すべて」とする。定義していない値も「すべて」として扱い、存在しないページにはしない。
 - ズーム倍率、スクロール位置、hover状態など、一時的なUI状態までURLに保持する必要はない。
 - メンバー比較など、将来の機能のURLは必要になった時点で決定する。
 - 直接アクセスされたURLは、Cloudflare Workersが `index.html` を返し、React Routerで表示する画面を決める。この動作は `wrangler.jsonc` の `not_found_handling: "single-page-application"` で明示的に設定し、存在しないページもReact Routerで表示する。
@@ -101,7 +105,8 @@
 参照：[Issue #14のURL設計](https://github.com/djkazunoko/hpdays/issues/14#issuecomment-5679652169)、
 [PR #22](https://github.com/djkazunoko/hpdays/pull/22)、
 [Issue #24の決定事項](https://github.com/djkazunoko/hpdays/issues/24#issuecomment-6621823936)、
-[PR #30](https://github.com/djkazunoko/hpdays/pull/30)
+[PR #30](https://github.com/djkazunoko/hpdays/pull/30)、
+[PR #38](https://github.com/djkazunoko/hpdays/pull/38)
 
 ## 画面設計
 
@@ -120,9 +125,14 @@
 グループ一覧・詳細の独立画面は作成せず、対象グループはランキング・タイムラインで選択する。
 ランキング画面は、Hello! Project全体とグループ別で同じコンポーネントを使い、見出しなど対象によって異なる部分だけを切り替える。
 
+- 画面上では、卒業済みのメンバーを「OG」と表示する。公式でもファンの間でも一般的に使われている「現役」「OG」の呼び方に合わせる。データ・コード上では「卒業済み」（`graduated`）と呼ぶ。
+- ランキングの「すべて・現役・OG」はリンクで切り替える。状態をURLだけで持ち、画面側では状態を持たない。
+- ランキングの対象が0人の場合は、表の代わりに「現役メンバーはいません」のように、絞り込みの条件が分かるメッセージを表示する。
+
 参照：[Issue #13の画面設計](https://github.com/djkazunoko/hpdays/issues/13#issuecomment-5676335637)、
 [Issue #14のURL設計](https://github.com/djkazunoko/hpdays/issues/14#issuecomment-5679652169)、
-[PR #30](https://github.com/djkazunoko/hpdays/pull/30)
+[PR #30](https://github.com/djkazunoko/hpdays/pull/30)、
+[PR #38](https://github.com/djkazunoko/hpdays/pull/38)
 
 ## 実装方針
 
@@ -131,11 +141,13 @@
 - 在籍日数、順位などの計算や判定は `src/utils` のTypeScriptで行い、Reactのコンポーネントは結果を表示する。
 - 表示の切り替えに必要な判定（例：在籍日数が最小在籍日数か）も計算結果に含め、コンポーネントではデータ設計上のルールを判定しない。表示する文言や形式はコンポーネントで決める。
 - ランキングの計算結果は、Hello! Project全体・グループ別とも同じ型（`RankingEntry`）とする。グループ在籍は日単位の日付だけを持つが、最小在籍日数かどうかの判定はグループ別でも同じルールで行い、結果に含める。画面で使わない値は結果に含めない。
-- 計算処理はJSONの全データを受け取り、対象グループなどの絞り込みも計算処理の中で行う。ルート定義で絞り込んでから渡さない。
+- 計算処理はJSONの全データを受け取り、対象グループや現役・卒業済みなどの絞り込みも計算処理の中で行う。ルート定義で絞り込んでから渡さない。
+- 絞り込みの条件は、条件ごとに関数を分けず、ランキングの関数の引数で受け取る。クエリパラメータの値を絞り込みの条件に変換する処理も `src/utils` に置く。
 - ページのコンポーネントは表示するデータをpropsで受け取り、JSONの読み込みと計算処理の呼び出しはルート定義で行う。
 
 参照：[PR #22](https://github.com/djkazunoko/hpdays/pull/22)、
-[PR #30](https://github.com/djkazunoko/hpdays/pull/30)
+[PR #30](https://github.com/djkazunoko/hpdays/pull/30)、
+[PR #38](https://github.com/djkazunoko/hpdays/pull/38)
 
 ### ライブラリ
 
