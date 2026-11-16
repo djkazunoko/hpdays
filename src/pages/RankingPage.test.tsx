@@ -20,13 +20,20 @@ function createEntry(
   }
 }
 
-// 絞り込みのリンクがルーターを必要とするため、MemoryRouterの中で表示する。
+const groupA = { id: "group-a", name: "グループA" }
+const groupB = { id: "group-b", name: "グループB" }
+
+// 対象・絞り込みのリンクがルーターを必要とするため、MemoryRouterの中で表示する。
 function renderRankingPage(props: Partial<ComponentProps<typeof RankingPage>>, path = "/rankings") {
   render(
     <MemoryRouter initialEntries={[path]}>
-      <RankingPage ranking={[]} membershipStatusFilter="all" {...props} />
+      <RankingPage groups={[]} selectedGroup={null} ranking={[]} membershipStatusFilter="all" {...props} />
     </MemoryRouter>,
   )
+}
+
+function getTargetLinks() {
+  return within(screen.getByRole("navigation", { name: "ランキングの対象" })).getAllByRole("link")
 }
 
 function getRowTexts() {
@@ -47,7 +54,6 @@ describe("RankingPage", () => {
     ]
     renderRankingPage({ ranking })
 
-    expect(screen.getByRole("heading", { name: "在籍日数ランキング" })).toBeDefined()
     expect(getRowTexts()).toEqual([
       ["1", "メンバーA", "5302日"],
       ["2", "メンバーB", "100日"],
@@ -62,11 +68,44 @@ describe("RankingPage", () => {
     expect(getRowTexts()).toEqual([["1", "メンバーA", "5302日以上"]])
   })
 
-  test("グループを指定した場合はグループ名を見出しに表示する", () => {
-    renderRankingPage({ group: { id: "group-a", name: "グループA" }, ranking: [createEntry(1, "メンバーA", 100)] })
+  test("グループを選択していない場合は、Hello! Project全体のランキングであることを見出しに表示する", () => {
+    renderRankingPage({ selectedGroup: null })
+
+    expect(screen.getByRole("heading", { name: "ハロプロ在籍日数ランキング" })).toBeDefined()
+  })
+
+  test("グループを選択している場合はグループ名を見出しに表示する", () => {
+    renderRankingPage({ groups: [groupA], selectedGroup: groupA })
 
     expect(screen.getByRole("heading", { name: "グループA 在籍日数ランキング" })).toBeDefined()
-    expect(getRowTexts()).toEqual([["1", "メンバーA", "100日"]])
+  })
+
+  test("Hello! Project全体と各グループのランキングへのリンクを、グループの並び順のまま表示する", () => {
+    renderRankingPage({ groups: [groupA, groupB] })
+
+    expect(getTargetLinks().map((link) => [link.textContent, link.getAttribute("href")])).toEqual([
+      ["ハロプロ全体", "/rankings"],
+      ["グループA", "/rankings/group-a"],
+      ["グループB", "/rankings/group-b"],
+    ])
+  })
+
+  test("対象を切り替えるリンクは、絞り込みの状態を引き継ぐ", () => {
+    renderRankingPage({ groups: [groupA], membershipStatusFilter: "active" }, "/rankings?status=active")
+
+    expect(getTargetLinks().map((link) => link.getAttribute("href"))).toEqual([
+      "/rankings?status=active",
+      "/rankings/group-a?status=active",
+    ])
+  })
+
+  test.each([
+    { selectedGroup: null, label: "ハロプロ全体" },
+    { selectedGroup: groupB, label: "グループB" },
+  ])("「$label」を表示している場合は「$label」だけを選択中として示す", ({ selectedGroup, label }) => {
+    renderRankingPage({ groups: [groupA, groupB], selectedGroup })
+
+    expect(getTargetLinks().filter((link) => link.getAttribute("aria-current") === "page").map((link) => link.textContent)).toEqual([label])
   })
 
   test("すべて・現役・OGを切り替えるリンクを、現在のパスのクエリパラメータとして表示する", () => {

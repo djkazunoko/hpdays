@@ -139,6 +139,8 @@ function HelloProjectRankingRoute() {
 
   return (
     <RankingPage
+      groups={groups}
+      selectedGroup={null}
       ranking={createHelloProjectRanking(members, groupMemberships, traineeMemberships, membershipStatusFilter)}
       membershipStatusFilter={membershipStatusFilter}
     />
@@ -153,7 +155,8 @@ function GroupRankingRoute() {
 
   return (
     <RankingPage
-      group={group}
+      groups={groups}
+      selectedGroup={group}
       ranking={createGroupRanking(group.id, members, groupMemberships, membershipStatusFilter)}
       membershipStatusFilter={membershipStatusFilter}
     />

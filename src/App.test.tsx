@@ -87,6 +87,24 @@ describe("App", () => {
     ))
   })
 
+  test("グループのリンクを選ぶと、絞り込みを保ったままそのグループのランキングを表示する", () => {
+    render(
+      <MemoryRouter initialEntries={["/rankings?status=active"]}>
+        <App />
+      </MemoryRouter>,
+    )
+
+    fireEvent.click(screen.getByRole("link", { name: "モーニング娘。" }))
+
+    expect(screen.getByRole("heading", { name: "モーニング娘。 在籍日数ランキング" })).toBeDefined()
+    expect(screen.getByRole("link", { name: "現役" }).getAttribute("aria-current")).toBe("page")
+    expect(getRowMemberNames()).toEqual(getMemberNames(
+      groupMemberships
+        .filter((membership) => membership.groupId === "morningmusume" && membership.endedAt === null)
+        .map((membership) => membership.memberId),
+    ))
+  })
+
   test.each(["/rankings/unknown-group", "/unknown-page"])(
     "%sは存在しないページを表示する",
     (path) => {
