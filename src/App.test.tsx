@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react"
-import { MemoryRouter } from "react-router"
+import { MemoryRouter, useLocation } from "react-router"
 import { afterEach, describe, expect, test } from "vitest"
 import App from "./App"
 import groupMemberships from "./data/group-memberships.json"
@@ -15,9 +15,27 @@ function getMemberNames(memberIds: string[]) {
   return memberIds.map((memberId) => members.find((member) => member.id === memberId)?.name).sort()
 }
 
+// リダイレクト後のURLを確認するため、現在のURLを表示する。
+function CurrentUrl() {
+  const location = useLocation()
+  return <output>{location.pathname + location.search}</output>
+}
+
 afterEach(cleanup)
 
 describe("App", () => {
+  test("/は/rankingsへリダイレクトし、Hello! Project在籍日数ランキングを表示する", () => {
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <App />
+        <CurrentUrl />
+      </MemoryRouter>,
+    )
+
+    expect(screen.getByRole("status").textContent).toBe("/rankings")
+    expect(screen.getByRole("heading", { name: "ハロプロ在籍日数ランキング" })).toBeDefined()
+  })
+
   test("/rankingsでグループ在籍のある全メンバーのHello! Project在籍日数ランキングを表示する", () => {
     render(
       <MemoryRouter initialEntries={["/rankings"]}>
