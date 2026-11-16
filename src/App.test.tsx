@@ -36,6 +36,18 @@ describe("App", () => {
     expect(screen.getByRole("heading", { name: "ハロプロ在籍日数ランキング" })).toBeDefined()
   })
 
+  test("/のクエリパラメータは、リダイレクト先へ引き継がない", () => {
+    render(
+      <MemoryRouter initialEntries={["/?status=active"]}>
+        <App />
+        <CurrentUrl />
+      </MemoryRouter>,
+    )
+
+    expect(screen.getByRole("status").textContent).toBe("/rankings")
+    expect(screen.getByRole("link", { name: "すべて" }).getAttribute("aria-current")).toBe("page")
+  })
+
   test("/rankingsでグループ在籍のある全メンバーのHello! Project在籍日数ランキングを表示する", () => {
     render(
       <MemoryRouter initialEntries={["/rankings"]}>
