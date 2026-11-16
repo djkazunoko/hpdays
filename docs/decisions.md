@@ -93,6 +93,7 @@
 | `/members/:memberId` | メンバー詳細。メンバーIDはJSONのIDを使用する |
 
 - `/` は特定機能の恒久的なURLとして扱わず、ランキングなどには固有のURLを持たせる。
+- `/` は当面 `/rankings` へリダイレクトする。`/` のまま同じ画面を表示しない。`/` のクエリパラメータには意味を定義していないため、リダイレクト先へ引き継がない。ファーストリリース時に `/` で何を表示するかは、タイムラインなどの画面ができてから決める。
 - グループはランキング・タイムラインの対象として扱い、`/groups`・`/groups/:groupId` は作成しない。
 - メンバー一覧の `/members` は作成しない。`/members` と存在しないメンバーIDへのアクセスは、存在しないページとして扱う。
 - `groups.json` に存在しないグループIDへのアクセスも、存在しないページとして扱う。存在しないページは、定義していないパスと同じくReact Routerで表示する。
@@ -106,7 +107,8 @@
 [PR #22](https://github.com/djkazunoko/hpdays/pull/22)、
 [Issue #24の決定事項](https://github.com/djkazunoko/hpdays/issues/24#issuecomment-6621823936)、
 [PR #30](https://github.com/djkazunoko/hpdays/pull/30)、
-[PR #38](https://github.com/djkazunoko/hpdays/pull/38)
+[PR #38](https://github.com/djkazunoko/hpdays/pull/38)、
+[PR #40](https://github.com/djkazunoko/hpdays/pull/40)
 
 ## 画面設計
 
@@ -127,12 +129,15 @@
 
 - 画面上では、卒業済みのメンバーを「OG」と表示する。公式でもファンの間でも一般的に使われている「現役」「OG」の呼び方に合わせる。データ・コード上では「卒業済み」（`graduated`）と呼ぶ。
 - ランキングの「すべて・現役・OG」はリンクで切り替える。状態をURLだけで持ち、画面側では状態を持たない。
+- ランキングの対象（ハロプロ全体・各グループ）もリンクで切り替え、`groups.json` の順に並べる。対象を切り替えても、現役・OGの絞り込みは引き継ぐ。
+- Hello! Project全体のランキングの見出しは「ハロプロ在籍日数ランキング」とし、対象が分かるようにする。
 - ランキングの対象が0人の場合は、表の代わりに「現役メンバーはいません」のように、絞り込みの条件が分かるメッセージを表示する。
 
 参照：[Issue #13の画面設計](https://github.com/djkazunoko/hpdays/issues/13#issuecomment-5676335637)、
 [Issue #14のURL設計](https://github.com/djkazunoko/hpdays/issues/14#issuecomment-5679652169)、
 [PR #30](https://github.com/djkazunoko/hpdays/pull/30)、
-[PR #38](https://github.com/djkazunoko/hpdays/pull/38)
+[PR #38](https://github.com/djkazunoko/hpdays/pull/38)、
+[PR #40](https://github.com/djkazunoko/hpdays/pull/40)
 
 ## 実装方針
 
@@ -144,10 +149,12 @@
 - 計算処理はJSONの全データを受け取り、対象グループや現役・卒業済みなどの絞り込みも計算処理の中で行う。ルート定義で絞り込んでから渡さない。
 - 絞り込みの条件は、条件ごとに関数を分けず、ランキングの関数の引数で受け取る。クエリパラメータの値を絞り込みの条件に変換する処理も `src/utils` に置く。
 - ページのコンポーネントは表示するデータをpropsで受け取り、JSONの読み込みと計算処理の呼び出しはルート定義で行う。
+- `RankingPage` は、グループの一覧と選択中のグループを受け取る。Hello! Project全体は、選択中のグループを省略せず `null` で表す。
 
 参照：[PR #22](https://github.com/djkazunoko/hpdays/pull/22)、
 [PR #30](https://github.com/djkazunoko/hpdays/pull/30)、
-[PR #38](https://github.com/djkazunoko/hpdays/pull/38)
+[PR #38](https://github.com/djkazunoko/hpdays/pull/38)、
+[PR #40](https://github.com/djkazunoko/hpdays/pull/40)
 
 ### ライブラリ
 
