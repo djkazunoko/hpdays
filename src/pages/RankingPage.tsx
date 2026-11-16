@@ -2,7 +2,9 @@ import { Link } from "react-router"
 import type { Group, MembershipStatusFilter, RankingEntry } from "../types/data"
 
 type Props = {
-  group?: Group
+  groups: Group[]
+  // nullはHello! Project全体のランキングを表す。
+  selectedGroup: Group | null
   ranking: RankingEntry[]
   membershipStatusFilter: MembershipStatusFilter
 }
@@ -24,14 +26,33 @@ function formatMembershipDays(entry: RankingEntry): string {
   return `${entry.membershipDays}日${entry.isMinimumMembershipDays ? "以上" : ""}`
 }
 
-export function RankingPage({ group, ranking, membershipStatusFilter }: Props) {
+export function RankingPage({ groups, selectedGroup, ranking, membershipStatusFilter }: Props) {
   const selectedOption = membershipStatusFilterOptions.find(
     (option) => option.membershipStatusFilter === membershipStatusFilter,
   )
+  const targetOptions: { group: Group | null; label: string; pathname: string }[] = [
+    { group: null, label: "ハロプロ全体", pathname: "/rankings" },
+    ...groups.map((group) => ({ group, label: group.name, pathname: `/rankings/${group.id}` })),
+  ]
 
   return (
     <main>
-      <h1>{group ? `${group.name} 在籍日数ランキング` : "在籍日数ランキング"}</h1>
+      <h1>{selectedGroup ? `${selectedGroup.name} 在籍日数ランキング` : "ハロプロ在籍日数ランキング"}</h1>
+      <nav aria-label="ランキングの対象">
+        <ul>
+          {targetOptions.map((option) => (
+            <li key={option.pathname}>
+              {/* 対象を切り替えても、絞り込みの状態は引き継ぐ。 */}
+              <Link
+                to={{ pathname: option.pathname, search: selectedOption?.search }}
+                aria-current={option.group?.id === selectedGroup?.id ? "page" : undefined}
+              >
+                {option.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
       <nav aria-label="メンバーの絞り込み">
         <ul>
           {membershipStatusFilterOptions.map((option) => (

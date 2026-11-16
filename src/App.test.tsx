@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react"
-import { MemoryRouter } from "react-router"
+import { MemoryRouter, useLocation } from "react-router"
 import { afterEach, describe, expect, test } from "vitest"
 import App from "./App"
 import groupMemberships from "./data/group-memberships.json"
@@ -15,9 +15,39 @@ function getMemberNames(memberIds: string[]) {
   return memberIds.map((memberId) => members.find((member) => member.id === memberId)?.name).sort()
 }
 
+// リダイレクト後のURLを確認するため、現在のURLを表示する。
+function CurrentUrl() {
+  const location = useLocation()
+  return <output>{location.pathname + location.search}</output>
+}
+
 afterEach(cleanup)
 
 describe("App", () => {
+  test("/は/rankingsへリダイレクトし、Hello! Project在籍日数ランキングを表示する", () => {
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <App />
+        <CurrentUrl />
+      </MemoryRouter>,
+    )
+
+    expect(screen.getByRole("status").textContent).toBe("/rankings")
+    expect(screen.getByRole("heading", { name: "ハロプロ在籍日数ランキング" })).toBeDefined()
+  })
+
+  test("/のクエリパラメータは、リダイレクト先へ引き継がない", () => {
+    render(
+      <MemoryRouter initialEntries={["/?status=active"]}>
+        <App />
+        <CurrentUrl />
+      </MemoryRouter>,
+    )
+
+    expect(screen.getByRole("status").textContent).toBe("/rankings")
+    expect(screen.getByRole("link", { name: "すべて" }).getAttribute("aria-current")).toBe("page")
+  })
+
   test("/rankingsでグループ在籍のある全メンバーのHello! Project在籍日数ランキングを表示する", () => {
     render(
       <MemoryRouter initialEntries={["/rankings"]}>
@@ -80,6 +110,24 @@ describe("App", () => {
     fireEvent.click(screen.getByRole("link", { name: "現役" }))
 
     expect(screen.getByRole("heading", { name: "モーニング娘。 在籍日数ランキング" })).toBeDefined()
+    expect(getRowMemberNames()).toEqual(getMemberNames(
+      groupMemberships
+        .filter((membership) => membership.groupId === "morningmusume" && membership.endedAt === null)
+        .map((membership) => membership.memberId),
+    ))
+  })
+
+  test("グループのリンクを選ぶと、絞り込みを保ったままそのグループのランキングを表示する", () => {
+    render(
+      <MemoryRouter initialEntries={["/rankings?status=active"]}>
+        <App />
+      </MemoryRouter>,
+    )
+
+    fireEvent.click(screen.getByRole("link", { name: "モーニング娘。" }))
+
+    expect(screen.getByRole("heading", { name: "モーニング娘。 在籍日数ランキング" })).toBeDefined()
+    expect(screen.getByRole("link", { name: "現役" }).getAttribute("aria-current")).toBe("page")
     expect(getRowMemberNames()).toEqual(getMemberNames(
       groupMemberships
         .filter((membership) => membership.groupId === "morningmusume" && membership.endedAt === null)
