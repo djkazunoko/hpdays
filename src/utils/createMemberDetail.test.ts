@@ -141,6 +141,12 @@ describe("createMemberDetail", () => {
     expect(createMemberDetail("unknown-member", [member], groups, groupMemberships, [])).toBeNull()
   })
 
+  test("グループ在籍のないメンバーは掲載対象ではないため、nullを返す", () => {
+    const member: Member = { id: "member-a", name: "メンバーA", birthday: "2000-01-01" }
+
+    expect(createMemberDetail("member-a", [member], groups, [], [])).toBeNull()
+  })
+
   test("グループ在籍データに対応するグループが存在しない場合はエラーになる", () => {
     const member: Member = { id: "suzuki-moa", name: "鈴木もあ", birthday: "2013-04-12" }
     const groupMemberships: GroupMembership[] = [
