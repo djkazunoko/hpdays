@@ -3,10 +3,12 @@ import groupMemberships from './data/group-memberships.json'
 import groups from './data/groups.json'
 import members from './data/members.json'
 import traineeMemberships from './data/trainee-memberships.json'
+import { MemberDetailPage } from './pages/MemberDetailPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 import { RankingPage } from './pages/RankingPage'
 import { createGroupRanking } from './utils/createGroupRanking'
 import { createHelloProjectRanking } from './utils/createHelloProjectRanking'
+import { createMemberDetail } from './utils/createMemberDetail'
 import { parseMembershipStatusFilter } from './utils/parseMembershipStatusFilter'
 
 function useMembershipStatusFilter() {
@@ -43,6 +45,15 @@ function GroupRankingRoute() {
   )
 }
 
+function MemberDetailRoute() {
+  const { memberId } = useParams()
+  // :memberId にマッチしたルートなので、memberIdは必ず存在する。
+  const memberDetail = createMemberDetail(memberId!, members, groups, groupMemberships, traineeMemberships)
+  if (!memberDetail) return <NotFoundPage />
+
+  return <MemberDetailPage memberDetail={memberDetail} />
+}
+
 function App() {
   return (
     <Routes>
@@ -50,6 +61,7 @@ function App() {
       <Route path="/" element={<Navigate to="/rankings" replace />} />
       <Route path="/rankings" element={<HelloProjectRankingRoute />} />
       <Route path="/rankings/:groupId" element={<GroupRankingRoute />} />
+      <Route path="/members/:memberId" element={<MemberDetailRoute />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )

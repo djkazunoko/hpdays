@@ -135,7 +135,42 @@ describe("App", () => {
     ))
   })
 
-  test.each(["/rankings/unknown-group", "/unknown-page"])(
+  test("/members/:memberId でそのメンバーの在籍記録を表示する", () => {
+    render(
+      <MemoryRouter initialEntries={["/members/oda-sakura"]}>
+        <App />
+      </MemoryRouter>,
+    )
+
+    expect(screen.getByRole("heading", { level: 1, name: "小田さくら" })).toBeDefined()
+    expect(screen.getByRole("link", { name: "モーニング娘。" }).getAttribute("href")).toBe("/rankings/morningmusume")
+  })
+
+  test("ランキングのメンバー名を選ぶと、そのメンバーの詳細を表示する", () => {
+    render(
+      <MemoryRouter initialEntries={["/rankings"]}>
+        <App />
+      </MemoryRouter>,
+    )
+
+    fireEvent.click(screen.getByRole("link", { name: "小田さくら" }))
+
+    expect(screen.getByRole("heading", { level: 1, name: "小田さくら" })).toBeDefined()
+  })
+
+  test("メンバー詳細のランキングへのリンクを選ぶと、ランキングを表示する", () => {
+    render(
+      <MemoryRouter initialEntries={["/members/oda-sakura"]}>
+        <App />
+      </MemoryRouter>,
+    )
+
+    fireEvent.click(screen.getByRole("link", { name: "ハロプロ在籍日数ランキング" }))
+
+    expect(screen.getByRole("heading", { level: 1, name: "ハロプロ在籍日数ランキング" })).toBeDefined()
+  })
+
+  test.each(["/rankings/unknown-group", "/members", "/members/unknown-member", "/unknown-page"])(
     "%sは存在しないページを表示する",
     (path) => {
       render(
