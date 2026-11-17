@@ -95,7 +95,7 @@
 - `/` は特定機能の恒久的なURLとして扱わず、ランキングなどには固有のURLを持たせる。
 - `/` は当面 `/rankings` へリダイレクトする。`/` のまま同じ画面を表示しない。`/` のクエリパラメータには意味を定義していないため、リダイレクト先へ引き継がない。ファーストリリース時に `/` で何を表示するかは、タイムラインなどの画面ができてから決める。
 - グループはランキング・タイムラインの対象として扱い、`/groups`・`/groups/:groupId` は作成しない。
-- メンバー一覧の `/members` は作成しない。`/members` と存在しないメンバーIDへのアクセスは、存在しないページとして扱う。
+- メンバー一覧の `/members` は作成しない。`/members` と存在しないメンバーIDへのアクセスは、存在しないページとして扱う。`members.json` に存在してもグループ在籍のないメンバーは掲載対象ではないため、同じく存在しないページとして扱う。
 - `groups.json` に存在しないグループIDへのアクセスも、存在しないページとして扱う。存在しないページは、定義していないパスと同じくReact Routerで表示する。
 - 絞り込み、並び順、選択状態など、共有時に再現する価値のある表示条件はクエリパラメータで表す。具体的な名前・保持する状態は各機能の実装時に決める。
 - ランキングの現役・卒業済みの絞り込みは `status` クエリパラメータで表す（`?status=active`、`?status=graduated`）。パラメータがない場合は「すべて」とする。定義していない値も「すべて」として扱い、存在しないページにはしない。
@@ -108,7 +108,8 @@
 [Issue #24の決定事項](https://github.com/djkazunoko/hpdays/issues/24#issuecomment-6621823936)、
 [PR #30](https://github.com/djkazunoko/hpdays/pull/30)、
 [PR #38](https://github.com/djkazunoko/hpdays/pull/38)、
-[PR #40](https://github.com/djkazunoko/hpdays/pull/40)
+[PR #40](https://github.com/djkazunoko/hpdays/pull/40)、
+[PR #41](https://github.com/djkazunoko/hpdays/pull/41)
 
 ## 画面設計
 
@@ -132,12 +133,17 @@
 - ランキングの対象（ハロプロ全体・各グループ）もリンクで切り替え、`groups.json` の順に並べる。対象を切り替えても、現役・OGの絞り込みは引き継ぐ。
 - Hello! Project全体のランキングの見出しは「ハロプロ在籍日数ランキング」とし、対象が分かるようにする。
 - ランキングの対象が0人の場合は、表の代わりに「現役メンバーはいません」のように、絞り込みの条件が分かるメッセージを表示する。
+- ランキングのメンバー名は、メンバー詳細へのリンクにする。
+- メンバー詳細には、メンバー名、Hello! Project在籍期間・在籍日数、研修生加入日（研修生歴がある場合）、グループごとの在籍期間・在籍日数を表示する。グループ在籍は加入日の古い順に並べる。
+- メンバー詳細からランキングへは、Hello! Project全体のランキングへのリンクと、グループ名からそのグループのランキングへのリンクで戻れるようにする。現役・OGの絞り込みは引き継がない。
+- 日付は「2008年6月22日」の形式で表示し、月までしか分からない日付は日を補わず「2020年1月」と表示する。現役の在籍期間は終了日の代わりに「現在」と表示する。
 
 参照：[Issue #13の画面設計](https://github.com/djkazunoko/hpdays/issues/13#issuecomment-5676335637)、
 [Issue #14のURL設計](https://github.com/djkazunoko/hpdays/issues/14#issuecomment-5679652169)、
 [PR #30](https://github.com/djkazunoko/hpdays/pull/30)、
 [PR #38](https://github.com/djkazunoko/hpdays/pull/38)、
-[PR #40](https://github.com/djkazunoko/hpdays/pull/40)
+[PR #40](https://github.com/djkazunoko/hpdays/pull/40)、
+[PR #41](https://github.com/djkazunoko/hpdays/pull/41)
 
 ## 実装方針
 
@@ -145,16 +151,20 @@
 
 - 在籍日数、順位などの計算や判定は `src/utils` のTypeScriptで行い、Reactのコンポーネントは結果を表示する。
 - 表示の切り替えに必要な判定（例：在籍日数が最小在籍日数か）も計算結果に含め、コンポーネントではデータ設計上のルールを判定しない。表示する文言や形式はコンポーネントで決める。
+- 表示する文言や形式を決める関数（例：在籍日数に「日以上」を付ける `formatMembershipDays`）は、複数の画面で共用する場合も `src/utils` ではなく `src/pages` に置く。`src/utils` には、データ設計上のルールに基づく計算・判定だけを置く。
 - ランキングの計算結果は、Hello! Project全体・グループ別とも同じ型（`RankingEntry`）とする。グループ在籍は日単位の日付だけを持つが、最小在籍日数かどうかの判定はグループ別でも同じルールで行い、結果に含める。画面で使わない値は結果に含めない。
 - 計算処理はJSONの全データを受け取り、対象グループや現役・卒業済みなどの絞り込みも計算処理の中で行う。ルート定義で絞り込んでから渡さない。
 - 絞り込みの条件は、条件ごとに関数を分けず、ランキングの関数の引数で受け取る。クエリパラメータの値を絞り込みの条件に変換する処理も `src/utils` に置く。
 - ページのコンポーネントは表示するデータをpropsで受け取り、JSONの読み込みと計算処理の呼び出しはルート定義で行う。
 - `RankingPage` は、グループの一覧と選択中のグループを受け取る。Hello! Project全体は、選択中のグループを省略せず `null` で表す。
+- メンバー詳細の計算結果は `MemberDetail` とする。在籍期間と在籍日数をまとめたものは `MembershipSummary`、グループ在籍の分はグループを含めた `GroupMembershipSummary` とし、JSONの在籍データ（`GroupMembership`）と名前で区別する。研修生歴がない場合、研修生加入日は省略せず `null` で表す。
+- `createMemberDetail` は、存在しないメンバーIDやグループ在籍のないメンバーでは `null` を返し、ルート定義で存在しないページを表示する。
 
 参照：[PR #22](https://github.com/djkazunoko/hpdays/pull/22)、
 [PR #30](https://github.com/djkazunoko/hpdays/pull/30)、
 [PR #38](https://github.com/djkazunoko/hpdays/pull/38)、
-[PR #40](https://github.com/djkazunoko/hpdays/pull/40)
+[PR #40](https://github.com/djkazunoko/hpdays/pull/40)、
+[PR #41](https://github.com/djkazunoko/hpdays/pull/41)
 
 ### ライブラリ
 
