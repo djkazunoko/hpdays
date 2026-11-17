@@ -36,4 +36,22 @@ export type MembershipPeriod = {
   endedAt: string | null
 }
 
+// 在籍期間と、その期間から求めた在籍日数。
+export type MembershipSummary = MembershipPeriod & {
+  membershipDays: number
+  isMinimumMembershipDays: boolean
+}
+
+export type GroupMembershipSummary = MembershipSummary & {
+  group: Group
+}
+
+export type MemberDetail = {
+  member: Member
+  helloProjectMembershipSummary: MembershipSummary
+  groupMembershipSummaries: GroupMembershipSummary[]
+  // 研修生歴がない場合はnull。
+  traineeStartedAt: string | null
+}
+
 export type MembershipStatusFilter = "all" | "active" | "graduated"

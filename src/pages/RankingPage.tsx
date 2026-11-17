@@ -1,5 +1,6 @@
 import { Link } from "react-router"
 import type { Group, MembershipStatusFilter, RankingEntry } from "../types/data"
+import { formatMembershipDays } from "./formatMembershipDays"
 
 type Props = {
   groups: Group[]
@@ -21,10 +22,6 @@ const membershipStatusFilterOptions: {
   { membershipStatusFilter: "active", label: "現役", search: "?status=active", emptyMessage: "現役メンバーはいません" },
   { membershipStatusFilter: "graduated", label: "OG", search: "?status=graduated", emptyMessage: "OGはいません" },
 ]
-
-function formatMembershipDays(entry: RankingEntry): string {
-  return `${entry.membershipDays}日${entry.isMinimumMembershipDays ? "以上" : ""}`
-}
 
 export function RankingPage({ groups, selectedGroup, ranking, membershipStatusFilter }: Props) {
   const selectedOption = membershipStatusFilterOptions.find(
@@ -82,7 +79,9 @@ export function RankingPage({ groups, selectedGroup, ranking, membershipStatusFi
             {ranking.map((entry) => (
               <tr key={entry.member.id}>
                 <td>{entry.rank}</td>
-                <td>{entry.member.name}</td>
+                <td>
+                  <Link to={`/members/${entry.member.id}`}>{entry.member.name}</Link>
+                </td>
                 <td>{formatMembershipDays(entry)}</td>
               </tr>
             ))}

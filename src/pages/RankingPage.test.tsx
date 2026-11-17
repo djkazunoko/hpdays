@@ -80,6 +80,12 @@ describe("RankingPage", () => {
     expect(screen.getByRole("heading", { name: "グループA 在籍日数ランキング" })).toBeDefined()
   })
 
+  test("メンバー名を、メンバー詳細へのリンクとして表示する", () => {
+    renderRankingPage({ ranking: [{ ...createEntry(1, "小田さくら", 100), member: { id: "oda-sakura", name: "小田さくら", birthday: "1999-03-12" } }] })
+
+    expect(screen.getByRole("link", { name: "小田さくら" }).getAttribute("href")).toBe("/members/oda-sakura")
+  })
+
   test("Hello! Project全体と各グループのランキングへのリンクを、グループの並び順のまま表示する", () => {
     renderRankingPage({ groups: [groupA, groupB] })
 
