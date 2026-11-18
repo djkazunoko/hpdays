@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
-import { cleanup, render, screen, within } from "@testing-library/react"
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react"
 import type { ComponentProps } from "react"
-import { MemoryRouter } from "react-router"
+import { MemoryRouter, useLocation } from "react-router"
 import { afterEach, describe, expect, test } from "vitest"
 import type { RankingEntry } from "../types/data"
 import { RankingPage } from "./RankingPage"
@@ -23,13 +23,39 @@ function createEntry(
 const groupA = { id: "group-a", name: "グループA" }
 const groupB = { id: "group-b", name: "グループB" }
 
+const today = new Date(2026, 10, 18)
+
+// 日付の指定で移動した先のURLを確認するため、現在のURLを表示する。
+function CurrentUrl() {
+  const location = useLocation()
+  return <output>{location.pathname + location.search}</output>
+}
+
 // 対象・絞り込みのリンクがルーターを必要とするため、MemoryRouterの中で表示する。
 function renderRankingPage(props: Partial<ComponentProps<typeof RankingPage>>, path = "/rankings") {
   render(
     <MemoryRouter initialEntries={[path]}>
-      <RankingPage groups={[]} selectedGroup={null} ranking={[]} membershipStatusFilter="all" {...props} />
+      <RankingPage
+        groups={[]}
+        selectedGroup={null}
+        ranking={[]}
+        membershipStatusFilter="all"
+        selectedDate={null}
+        today={today}
+        {...props}
+      />
+      <CurrentUrl />
     </MemoryRouter>,
   )
+}
+
+function getMembershipStatusFilterLinks() {
+  return within(screen.getByRole("navigation", { name: "メンバーの絞り込み" })).getAllByRole("link")
+}
+
+function submitDate(value: string) {
+  fireEvent.change(screen.getByLabelText("日付"), { target: { value } })
+  fireEvent.click(screen.getByRole("button", { name: "表示" }))
 }
 
 function getTargetLinks() {
@@ -117,7 +143,7 @@ describe("RankingPage", () => {
   test("すべて・現役・OGを切り替えるリンクを、現在のパスのクエリパラメータとして表示する", () => {
     renderRankingPage({}, "/rankings/group-a")
 
-    const links = within(screen.getByRole("navigation", { name: "メンバーの絞り込み" })).getAllByRole("link")
+    const links = getMembershipStatusFilterLinks()
     expect(links.map((link) => [link.textContent, link.getAttribute("href")])).toEqual([
       ["すべて", "/rankings/group-a"],
       ["現役", "/rankings/group-a?status=active"],
@@ -132,7 +158,7 @@ describe("RankingPage", () => {
   ] as const)("絞り込みが「$membershipStatusFilter」の場合は「$label」だけを選択中として示す", ({ membershipStatusFilter, label }) => {
     renderRankingPage({ membershipStatusFilter })
 
-    const links = within(screen.getByRole("navigation", { name: "メンバーの絞り込み" })).getAllByRole("link")
+    const links = getMembershipStatusFilterLinks()
     expect(links.filter((link) => link.getAttribute("aria-current") === "page").map((link) => link.textContent)).toEqual([label])
   })
 
@@ -147,6 +173,67 @@ describe("RankingPage", () => {
     expect(screen.queryByRole("table")).toBeNull()
     // 他の条件に切り替えられるよう、絞り込みのリンクは表示したままにする。
     expect(screen.getByRole("navigation", { name: "メンバーの絞り込み" })).toBeDefined()
+  })
+
+  describe("日付の指定", () => {
+    test("日付を指定していない場合は、今日時点のランキングであることを表示する", () => {
+      renderRankingPage({ selectedDate: null })
+
+      expect(screen.getByText("2026年11月18日時点")).toBeDefined()
+      expect((screen.getByLabelText("日付") as HTMLInputElement).value).toBe("2026-11-18")
+    })
+
+    test("日付を指定している場合は、その日時点のランキングであることを表示する", () => {
+      renderRankingPage({ selectedDate: new Date(2015, 0, 2) }, "/rankings?date=2015-01-02")
+
+      expect(screen.getByText("2015年1月2日時点")).toBeDefined()
+      expect((screen.getByLabelText("日付") as HTMLInputElement).value).toBe("2015-01-02")
+    })
+
+    test("未来の日付は選べないよう、今日までを入力できる範囲にする", () => {
+      renderRankingPage({})
+
+      expect(screen.getByLabelText("日付").getAttribute("max")).toBe("2026-11-18")
+    })
+
+    test("日付を入力して表示すると、絞り込みの状態を保ったままその日付をクエリパラメータにする", () => {
+      renderRankingPage({ membershipStatusFilter: "active" }, "/rankings/group-a?status=active")
+
+      submitDate("2015-01-02")
+
+      expect(screen.getByRole("status").textContent).toBe("/rankings/group-a?status=active&date=2015-01-02")
+    })
+
+    test("日付を空にして表示すると、日付のクエリパラメータをなくして今日時点にする", () => {
+      renderRankingPage({ selectedDate: new Date(2015, 0, 2) }, "/rankings?date=2015-01-02")
+
+      submitDate("")
+
+      expect(screen.getByRole("status").textContent).toBe("/rankings")
+    })
+
+    test("今日時点に戻すリンクは、絞り込みの状態を保ったまま日付のクエリパラメータをなくす", () => {
+      renderRankingPage({ membershipStatusFilter: "graduated", selectedDate: new Date(2015, 0, 2) }, "/rankings?status=graduated&date=2015-01-02")
+
+      expect(screen.getByRole("link", { name: "今日" }).getAttribute("href")).toBe("/rankings?status=graduated")
+    })
+
+    test("対象・絞り込みを切り替えるリンクは、指定した日付を引き継ぐ", () => {
+      renderRankingPage(
+        { groups: [groupA], membershipStatusFilter: "active", selectedDate: new Date(2015, 0, 2) },
+        "/rankings?status=active&date=2015-01-02",
+      )
+
+      expect(getTargetLinks().map((link) => link.getAttribute("href"))).toEqual([
+        "/rankings?status=active&date=2015-01-02",
+        "/rankings/group-a?status=active&date=2015-01-02",
+      ])
+      expect(getMembershipStatusFilterLinks().map((link) => link.getAttribute("href"))).toEqual([
+        "/rankings?date=2015-01-02",
+        "/rankings?status=active&date=2015-01-02",
+        "/rankings?status=graduated&date=2015-01-02",
+      ])
+    })
   })
 
   test("対象のメンバーがいる場合は、メッセージを表示しない", () => {

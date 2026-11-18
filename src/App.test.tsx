@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react"
 import { MemoryRouter, useLocation } from "react-router"
-import { afterEach, describe, expect, test } from "vitest"
+import { afterEach, describe, expect, test, vi } from "vitest"
 import App from "./App"
 import groupMemberships from "./data/group-memberships.json"
 import members from "./data/members.json"
@@ -21,7 +21,18 @@ function CurrentUrl() {
   return <output>{location.pathname + location.search}</output>
 }
 
-afterEach(cleanup)
+// 指定日時点のメンバー。卒業日当日はまだ在籍しているため含める。
+function getGroupMemberIdsOnDate(groupId: string, date: string) {
+  return groupMemberships
+    .filter((membership) => membership.groupId === groupId && membership.startedAt <= date && (membership.endedAt === null || membership.endedAt >= date))
+    .map((membership) => membership.memberId)
+}
+
+afterEach(() => {
+  cleanup()
+  // テストで固定した日付を戻し、次のテストに影響させない。
+  vi.useRealTimers()
+})
 
 describe("App", () => {
   test("/は/rankingsへリダイレクトし、Hello! Project在籍日数ランキングを表示する", () => {
@@ -133,6 +144,48 @@ describe("App", () => {
         .filter((membership) => membership.groupId === "morningmusume" && membership.endedAt === null)
         .map((membership) => membership.memberId),
     ))
+  })
+
+  test("/rankings/:groupId?status=active&date=YYYY-MM-DDでその日時点に在籍していたメンバーだけのランキングを表示する", () => {
+    render(
+      <MemoryRouter initialEntries={["/rankings/morningmusume?status=active&date=2015-01-02"]}>
+        <App />
+      </MemoryRouter>,
+    )
+
+    expect(screen.getByText("2015年1月2日時点")).toBeDefined()
+    expect(getRowMemberNames()).toEqual(getMemberNames(getGroupMemberIdsOnDate("morningmusume", "2015-01-02")))
+  })
+
+  test.each(["/rankings?date=2015-02-29", "/rankings?date=2026-11-19"])(
+    "%sのように不正な日付や未来の日付は、今日時点のランキングを表示する",
+    (path) => {
+      // Dateだけを固定し、画面の更新に使われるタイマーは実際のものを使う。
+      vi.useFakeTimers({ toFake: ["Date"] })
+      vi.setSystemTime(new Date(2026, 10, 18, 12, 0))
+      render(
+        <MemoryRouter initialEntries={[path]}>
+          <App />
+        </MemoryRouter>,
+      )
+
+      expect(screen.getByText("2026年11月18日時点")).toBeDefined()
+    },
+  )
+
+  test("日付を入力して表示すると、絞り込みを保ったままその日時点のランキングを表示する", () => {
+    render(
+      <MemoryRouter initialEntries={["/rankings/morningmusume?status=active"]}>
+        <App />
+      </MemoryRouter>,
+    )
+
+    fireEvent.change(screen.getByLabelText("日付"), { target: { value: "2015-01-02" } })
+    fireEvent.click(screen.getByRole("button", { name: "表示" }))
+
+    expect(screen.getByText("2015年1月2日時点")).toBeDefined()
+    expect(screen.getByRole("link", { name: "現役" }).getAttribute("aria-current")).toBe("page")
+    expect(getRowMemberNames()).toEqual(getMemberNames(getGroupMemberIdsOnDate("morningmusume", "2015-01-02")))
   })
 
   test("/members/:memberId でそのメンバーの在籍記録を表示する", () => {

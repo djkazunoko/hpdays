@@ -10,28 +10,40 @@ import { createGroupRanking } from './utils/createGroupRanking'
 import { createHelloProjectRanking } from './utils/createHelloProjectRanking'
 import { createMemberDetail } from './utils/createMemberDetail'
 import { parseMembershipStatusFilter } from './utils/parseMembershipStatusFilter'
+import { parseRankingDate } from './utils/parseRankingDate'
 
-function useMembershipStatusFilter() {
+function useRankingConditions() {
   const [searchParams] = useSearchParams()
-  return parseMembershipStatusFilter(searchParams.get('status'))
+  const today = new Date()
+  const selectedDate = parseRankingDate(searchParams.get('date'), today)
+
+  return {
+    membershipStatusFilter: parseMembershipStatusFilter(searchParams.get('status')),
+    selectedDate,
+    today,
+    // 日付を指定していない場合は、今日時点のランキングを計算する。
+    baseDate: selectedDate ?? today,
+  }
 }
 
 function HelloProjectRankingRoute() {
-  const membershipStatusFilter = useMembershipStatusFilter()
+  const { membershipStatusFilter, selectedDate, today, baseDate } = useRankingConditions()
 
   return (
     <RankingPage
       groups={groups}
       selectedGroup={null}
-      ranking={createHelloProjectRanking(members, groupMemberships, traineeMemberships, membershipStatusFilter)}
+      ranking={createHelloProjectRanking(members, groupMemberships, traineeMemberships, membershipStatusFilter, baseDate)}
       membershipStatusFilter={membershipStatusFilter}
+      selectedDate={selectedDate}
+      today={today}
     />
   )
 }
 
 function GroupRankingRoute() {
   const { groupId } = useParams()
-  const membershipStatusFilter = useMembershipStatusFilter()
+  const { membershipStatusFilter, selectedDate, today, baseDate } = useRankingConditions()
   const group = groups.find((group) => group.id === groupId)
   if (!group) return <NotFoundPage />
 
@@ -39,8 +51,10 @@ function GroupRankingRoute() {
     <RankingPage
       groups={groups}
       selectedGroup={group}
-      ranking={createGroupRanking(group.id, members, groupMemberships, membershipStatusFilter)}
+      ranking={createGroupRanking(group.id, members, groupMemberships, membershipStatusFilter, baseDate)}
       membershipStatusFilter={membershipStatusFilter}
+      selectedDate={selectedDate}
+      today={today}
     />
   )
 }
