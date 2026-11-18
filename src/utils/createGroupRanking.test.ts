@@ -169,4 +169,40 @@ describe("createGroupRanking", () => {
       expect(createRanking("graduated")).toEqual([["ikuta-erina", 1], ["fukumura-mizuki", 2]])
     })
   })
+
+  describe("基準日時点のランキング", () => {
+    const members: Member[] = [
+      { id: "fukumura-mizuki", name: "譜久村聖", birthday: "1996-10-30" },
+      { id: "ikuta-erina", name: "生田衣梨奈", birthday: "1997-07-07" },
+      { id: "sugihara-meisa", name: "杉原明紗", birthday: "2011-12-20" },
+    ]
+    const memberships: GroupMembership[] = [
+      { memberId: "fukumura-mizuki", groupId: "morningmusume", startedAt: "2011-01-02", endedAt: "2023-11-29" },
+      { memberId: "ikuta-erina", groupId: "morningmusume", startedAt: "2011-01-02", endedAt: "2025-07-08" },
+      { memberId: "sugihara-meisa", groupId: "morningmusume", startedAt: "2026-03-21", endedAt: null },
+    ]
+
+    function createRanking(membershipStatusFilter: MembershipStatusFilter, baseDate: Date) {
+      return createGroupRanking("morningmusume", members, memberships, membershipStatusFilter, baseDate)
+        .map((entry) => [entry.member.id, entry.membershipDays, entry.rank])
+    }
+
+    test("基準日より後に加入した在籍は含めず、基準日時点の在籍日数で順位を付ける", () => {
+      // 譜久村聖は基準日より前に卒業しているため卒業日まで、生田衣梨奈は基準日まで計算する。
+      expect(createRanking("all", new Date(2024, 0, 1))).toEqual([
+        ["ikuta-erina", 4748, 1],
+        ["fukumura-mizuki", 4715, 2],
+      ])
+    })
+
+    test("加入日当日を基準日にした場合は在籍日数1日として含める", () => {
+      expect(createRanking("all", new Date(2026, 2, 21))).toContainEqual(["sugihara-meisa", 1, 3])
+    })
+
+    test("基準日時点の在籍状況で現役・卒業済みを判定する", () => {
+      const baseDate = new Date(2024, 0, 1)
+      expect(createRanking("active", baseDate)).toEqual([["ikuta-erina", 4748, 1]])
+      expect(createRanking("graduated", baseDate)).toEqual([["fukumura-mizuki", 4715, 1]])
+    })
+  })
 })

@@ -10,19 +10,18 @@ function toUtcTimestamp(date: string): number {
   return day === undefined ? Date.UTC(year, month, 0) : Date.UTC(year, month - 1, day)
 }
 
+// 基準日時点の在籍日数を求める。卒業日がないか、基準日より後に卒業する場合は基準日まで計算する。
+// 基準日より後に加入した在籍は0以下になる。
 export function calculateMembershipDays(
   membershipPeriod: MembershipPeriod,
-  currentDate = new Date(),
+  baseDate = new Date(),
 ): number {
   const startTimestamp = toUtcTimestamp(membershipPeriod.startedAt)
+  const baseTimestamp = Date.UTC(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate())
 
   const endTimestamp = membershipPeriod.endedAt
-    ? toUtcTimestamp(membershipPeriod.endedAt)
-    : Date.UTC(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate(),
-      )
+    ? Math.min(toUtcTimestamp(membershipPeriod.endedAt), baseTimestamp)
+    : baseTimestamp
 
   return Math.floor((endTimestamp - startTimestamp) / MILLISECONDS_PER_DAY) + 1
 }

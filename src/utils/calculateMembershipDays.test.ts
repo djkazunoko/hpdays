@@ -12,7 +12,7 @@ describe("calculateMembershipDays", () => {
     })).toBe(5302)
   })
 
-  test("現役メンバーは指定した現在日まで計算する", () => {
+  test("現役メンバーは指定した基準日まで計算する", () => {
     expect(calculateMembershipDays(
       { startedAt: "2012-09-14", endedAt: null },
       new Date(2026, 8, 9),
@@ -54,14 +54,28 @@ describe("calculateMembershipDays", () => {
     })).toBe(2)
   })
 
-  test("月単位の加入日でも現役なら現在日までの最小在籍日数を計算する", () => {
+  test("基準日より後に卒業した在籍は基準日まで計算する", () => {
+    expect(calculateMembershipDays(
+      { startedAt: "2011-01-02", endedAt: "2025-07-08" },
+      new Date(2011, 0, 3),
+    )).toBe(2)
+  })
+
+  test("卒業日当日を基準日にした場合は卒業日まで計算する", () => {
+    expect(calculateMembershipDays(
+      { startedAt: "2011-01-02", endedAt: "2025-07-08" },
+      new Date(2025, 6, 8),
+    )).toBe(5302)
+  })
+
+  test("月単位の加入日でも現役なら基準日までの最小在籍日数を計算する", () => {
     expect(calculateMembershipDays(
       { startedAt: "2019-12", endedAt: null },
       new Date(2020, 0, 12),
     )).toBe(13)
   })
 
-  test("現在日を省略した場合は実行時の日付を使う", () => {
+  test("基準日を省略した場合は実行時の日付を使う", () => {
     // new Date()の結果を固定し、実行日に左右されないようにする。
     vi.useFakeTimers()
     vi.setSystemTime(new Date(2020, 0, 12, 23, 59))
