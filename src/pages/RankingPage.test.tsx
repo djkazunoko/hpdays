@@ -194,10 +194,10 @@ describe("RankingPage", () => {
       expect(getSelectedDateParts()).toEqual(["2015", "1", "2"])
     })
 
-    test("年は今年から最も古い日付の年まで、新しい順に選べる", () => {
+    test("年は最も古い日付の年から今年まで、古い順に選べる", () => {
       renderRankingPage({ minDate: new Date(2024, 5, 16) })
 
-      expect(within(getDateSelect("年")).getAllByRole("option").map((option) => option.textContent)).toEqual(["2026", "2025", "2024"])
+      expect(within(getDateSelect("年")).getAllByRole("option").map((option) => option.textContent)).toEqual(["2024", "2025", "2026"])
     })
 
     test("未来の日付は選べないよう、今日を選択している場合は今月・今日までを選択肢にする", () => {

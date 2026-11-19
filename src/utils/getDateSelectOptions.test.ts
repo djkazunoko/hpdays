@@ -9,8 +9,8 @@ function range(start: number, end: number) {
 }
 
 describe("getDateSelectOptions", () => {
-  test("年は今年から最も古い日付の年まで、新しい順に並べる", () => {
-    expect(getDateSelectOptions(new Date(2015, 0, 2), new Date(2011, 0, 2), today).years).toEqual(range(2011, 2026).reverse())
+  test("年は最も古い日付の年から今年まで、古い順に並べる", () => {
+    expect(getDateSelectOptions(new Date(2015, 0, 2), new Date(2011, 0, 2), today).years).toEqual(range(2011, 2026))
   })
 
   test("今年・最も古い年以外では、月は1月から12月まで、日はその月の末日まで選べる", () => {
