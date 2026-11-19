@@ -6,36 +6,36 @@ import traineeMemberships from './data/trainee-memberships.json'
 import { MemberDetailPage } from './pages/MemberDetailPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 import { RankingPage } from './pages/RankingPage'
+import type { Group } from './types/data'
 import { createGroupRanking } from './utils/createGroupRanking'
 import { createHelloProjectRanking } from './utils/createHelloProjectRanking'
 import { createMemberDetail } from './utils/createMemberDetail'
+import { getEarliestRankingDate } from './utils/getEarliestRankingDate'
 import { parseMembershipStatusFilter } from './utils/parseMembershipStatusFilter'
 import { parseRankingDate } from './utils/parseRankingDate'
 
-function useRankingConditions() {
+// Hello! Project全体とグループ別のランキングで共通の処理。selectedGroupがnullの場合はHello! Project全体を表す。
+function RankingRoute({ selectedGroup }: { selectedGroup: Group | null }) {
   const [searchParams] = useSearchParams()
   const today = new Date()
-  const selectedDate = parseRankingDate(searchParams.get('date'), today)
+  const minDate = getEarliestRankingDate(selectedGroup?.id ?? null, members, groupMemberships, traineeMemberships)
+  const membershipStatusFilter = parseMembershipStatusFilter(searchParams.get('status'))
+  const selectedDate = parseRankingDate(searchParams.get('date'), minDate, today)
 
-  return {
-    membershipStatusFilter: parseMembershipStatusFilter(searchParams.get('status')),
-    selectedDate,
-    today,
-    // 日付を指定していない場合は、今日時点のランキングを計算する。
-    baseDate: selectedDate ?? today,
-  }
-}
-
-function HelloProjectRankingRoute() {
-  const { membershipStatusFilter, selectedDate, today, baseDate } = useRankingConditions()
+  // 日付を指定していない場合は、今日時点のランキングを計算する。
+  const baseDate = selectedDate ?? today
+  const ranking = selectedGroup
+    ? createGroupRanking(selectedGroup.id, members, groupMemberships, membershipStatusFilter, baseDate)
+    : createHelloProjectRanking(members, groupMemberships, traineeMemberships, membershipStatusFilter, baseDate)
 
   return (
     <RankingPage
       groups={groups}
-      selectedGroup={null}
-      ranking={createHelloProjectRanking(members, groupMemberships, traineeMemberships, membershipStatusFilter, baseDate)}
+      selectedGroup={selectedGroup}
+      ranking={ranking}
       membershipStatusFilter={membershipStatusFilter}
       selectedDate={selectedDate}
+      minDate={minDate}
       today={today}
     />
   )
@@ -43,20 +43,10 @@ function HelloProjectRankingRoute() {
 
 function GroupRankingRoute() {
   const { groupId } = useParams()
-  const { membershipStatusFilter, selectedDate, today, baseDate } = useRankingConditions()
   const group = groups.find((group) => group.id === groupId)
   if (!group) return <NotFoundPage />
 
-  return (
-    <RankingPage
-      groups={groups}
-      selectedGroup={group}
-      ranking={createGroupRanking(group.id, members, groupMemberships, membershipStatusFilter, baseDate)}
-      membershipStatusFilter={membershipStatusFilter}
-      selectedDate={selectedDate}
-      today={today}
-    />
-  )
+  return <RankingRoute selectedGroup={group} />
 }
 
 function MemberDetailRoute() {
@@ -73,7 +63,7 @@ function App() {
     <Routes>
       {/* / は特定機能の恒久的なURLにしないため、同じ画面を表示せずリダイレクトする。 */}
       <Route path="/" element={<Navigate to="/rankings" replace />} />
-      <Route path="/rankings" element={<HelloProjectRankingRoute />} />
+      <Route path="/rankings" element={<RankingRoute selectedGroup={null} />} />
       <Route path="/rankings/:groupId" element={<GroupRankingRoute />} />
       <Route path="/members/:memberId" element={<MemberDetailRoute />} />
       <Route path="*" element={<NotFoundPage />} />

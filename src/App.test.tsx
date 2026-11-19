@@ -5,6 +5,7 @@ import { afterEach, describe, expect, test, vi } from "vitest"
 import App from "./App"
 import groupMemberships from "./data/group-memberships.json"
 import members from "./data/members.json"
+import { formatDate } from "./pages/formatDate"
 
 // 順位や日数の正しさは計算処理と画面のテストで検証し、ここではデータの追加・修正の影響を受けないよう表示されるメンバーだけを確認する。
 function getRowMemberNames() {
@@ -26,6 +27,13 @@ function getGroupMemberIdsOnDate(groupId: string, date: string) {
   return groupMemberships
     .filter((membership) => membership.groupId === groupId && membership.startedAt <= date && (membership.endedAt === null || membership.endedAt >= date))
     .map((membership) => membership.memberId)
+}
+
+function getEarliestGroupStartedAt(groupId: string) {
+  return groupMemberships
+    .filter((membership) => membership.groupId === groupId)
+    .map((membership) => membership.startedAt)
+    .sort()[0]
 }
 
 afterEach(() => {
@@ -173,15 +181,39 @@ describe("App", () => {
     },
   )
 
-  test("日付を入力して表示すると、絞り込みを保ったままその日時点のランキングを表示する", () => {
+  test("対象の最も古い加入日より前の日付は、最も古い加入日時点のランキングを表示する", () => {
+    render(
+      <MemoryRouter initialEntries={["/rankings/rosychronicle?date=2010-01-01"]}>
+        <App />
+      </MemoryRouter>,
+    )
+
+    expect(screen.getByText(`${formatDate(getEarliestGroupStartedAt("rosychronicle"))}時点`)).toBeDefined()
+  })
+
+  test("対象を切り替えて日付がその対象の最も古い加入日より前になる場合は、最も古い加入日時点のランキングを表示する", () => {
+    render(
+      <MemoryRouter initialEntries={["/rankings/morningmusume?date=2015-01-02"]}>
+        <App />
+      </MemoryRouter>,
+    )
+
+    fireEvent.click(screen.getByRole("link", { name: "ロージークロニクル" }))
+
+    expect(screen.getByRole("heading", { name: "ロージークロニクル 在籍日数ランキング" })).toBeDefined()
+    expect(screen.getByText(`${formatDate(getEarliestGroupStartedAt("rosychronicle"))}時点`)).toBeDefined()
+  })
+
+  test("年・月・日を選ぶと、絞り込みを保ったままその日時点のランキングを表示する", () => {
     render(
       <MemoryRouter initialEntries={["/rankings/morningmusume?status=active"]}>
         <App />
       </MemoryRouter>,
     )
 
-    fireEvent.change(screen.getByLabelText("日付"), { target: { value: "2015-01-02" } })
-    fireEvent.click(screen.getByRole("button", { name: "表示" }))
+    fireEvent.change(screen.getByRole("combobox", { name: "年" }), { target: { value: "2015" } })
+    fireEvent.change(screen.getByRole("combobox", { name: "月" }), { target: { value: "1" } })
+    fireEvent.change(screen.getByRole("combobox", { name: "日" }), { target: { value: "2" } })
 
     expect(screen.getByText("2015年1月2日時点")).toBeDefined()
     expect(screen.getByRole("link", { name: "現役" }).getAttribute("aria-current")).toBe("page")

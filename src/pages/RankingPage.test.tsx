@@ -41,6 +41,7 @@ function renderRankingPage(props: Partial<ComponentProps<typeof RankingPage>>, p
         ranking={[]}
         membershipStatusFilter="all"
         selectedDate={null}
+        minDate={new Date(2011, 0, 2)}
         today={today}
         {...props}
       />
@@ -53,9 +54,12 @@ function getMembershipStatusFilterLinks() {
   return within(screen.getByRole("navigation", { name: "メンバーの絞り込み" })).getAllByRole("link")
 }
 
-function submitDate(value: string) {
-  fireEvent.change(screen.getByLabelText("日付"), { target: { value } })
-  fireEvent.click(screen.getByRole("button", { name: "表示" }))
+function getDateSelect(name: "年" | "月" | "日") {
+  return screen.getByRole("combobox", { name }) as HTMLSelectElement
+}
+
+function getSelectedDateParts() {
+  return [getDateSelect("年").value, getDateSelect("月").value, getDateSelect("日").value]
 }
 
 function getTargetLinks() {
@@ -176,40 +180,70 @@ describe("RankingPage", () => {
   })
 
   describe("日付の指定", () => {
-    test("日付を指定していない場合は、今日時点のランキングであることを表示する", () => {
+    test("日付を指定していない場合は、今日時点のランキングであることを表示し、今日を選択する", () => {
       renderRankingPage({ selectedDate: null })
 
       expect(screen.getByText("2026年11月18日時点")).toBeDefined()
-      expect((screen.getByLabelText("日付") as HTMLInputElement).value).toBe("2026-11-18")
+      expect(getSelectedDateParts()).toEqual(["2026", "11", "18"])
     })
 
-    test("日付を指定している場合は、その日時点のランキングであることを表示する", () => {
+    test("日付を指定している場合は、その日時点のランキングであることを表示し、その日を選択する", () => {
       renderRankingPage({ selectedDate: new Date(2015, 0, 2) }, "/rankings?date=2015-01-02")
 
       expect(screen.getByText("2015年1月2日時点")).toBeDefined()
-      expect((screen.getByLabelText("日付") as HTMLInputElement).value).toBe("2015-01-02")
+      expect(getSelectedDateParts()).toEqual(["2015", "1", "2"])
     })
 
-    test("未来の日付は選べないよう、今日までを入力できる範囲にする", () => {
+    test("年は今年から最も古い日付の年まで、新しい順に選べる", () => {
+      renderRankingPage({ minDate: new Date(2024, 5, 16) })
+
+      expect(within(getDateSelect("年")).getAllByRole("option").map((option) => option.textContent)).toEqual(["2026", "2025", "2024"])
+    })
+
+    test("未来の日付は選べないよう、今日を選択している場合は今月・今日までを選択肢にする", () => {
       renderRankingPage({})
 
-      expect(screen.getByLabelText("日付").getAttribute("max")).toBe("2026-11-18")
+      expect(within(getDateSelect("月")).getAllByRole("option")).toHaveLength(11)
+      expect(within(getDateSelect("日")).getAllByRole("option")).toHaveLength(18)
     })
 
-    test("日付を入力して表示すると、絞り込みの状態を保ったままその日付をクエリパラメータにする", () => {
-      renderRankingPage({ membershipStatusFilter: "active" }, "/rankings/group-a?status=active")
+    test("年・月・日を選ぶと、絞り込みの状態を保ったままその日付をクエリパラメータにする", () => {
+      renderRankingPage({ membershipStatusFilter: "active", selectedDate: new Date(2015, 0, 2) }, "/rankings/group-a?status=active&date=2015-01-02")
 
-      submitDate("2015-01-02")
+      fireEvent.change(getDateSelect("年"), { target: { value: "2012" } })
 
-      expect(screen.getByRole("status").textContent).toBe("/rankings/group-a?status=active&date=2015-01-02")
+      expect(screen.getByRole("status").textContent).toBe("/rankings/group-a?status=active&date=2012-01-02")
     })
 
-    test("日付を空にして表示すると、日付のクエリパラメータをなくして今日時点にする", () => {
-      renderRankingPage({ selectedDate: new Date(2015, 0, 2) }, "/rankings?date=2015-01-02")
+    test("月を変えて存在しない日付になる場合は、その月の末日にする", () => {
+      renderRankingPage({ selectedDate: new Date(2015, 0, 31) }, "/rankings?date=2015-01-31")
 
-      submitDate("")
+      fireEvent.change(getDateSelect("月"), { target: { value: "2" } })
 
-      expect(screen.getByRole("status").textContent).toBe("/rankings")
+      expect(screen.getByRole("status").textContent).toBe("/rankings?date=2015-02-28")
+    })
+
+    test("最も古い日付の月を選択している場合は、その日からを選択肢にする", () => {
+      renderRankingPage({ minDate: new Date(2008, 5, 22), selectedDate: new Date(2008, 5, 30) }, "/rankings?date=2008-06-30")
+
+      expect(within(getDateSelect("月")).getAllByRole("option").map((option) => option.textContent)).toEqual(["6", "7", "8", "9", "10", "11", "12"])
+      expect(within(getDateSelect("日")).getAllByRole("option")[0].textContent).toBe("22")
+    })
+
+    test("年を変えて最も古い日付より前になる場合は、最も古い日付にする", () => {
+      renderRankingPage({ minDate: new Date(2008, 5, 22), selectedDate: new Date(2010, 0, 1) }, "/rankings?date=2010-01-01")
+
+      fireEvent.change(getDateSelect("年"), { target: { value: "2008" } })
+
+      expect(screen.getByRole("status").textContent).toBe("/rankings?date=2008-06-22")
+    })
+
+    test("年を変えて未来の日付になる場合は、今日にする", () => {
+      renderRankingPage({ selectedDate: new Date(2015, 11, 1) }, "/rankings?date=2015-12-01")
+
+      fireEvent.change(getDateSelect("年"), { target: { value: "2026" } })
+
+      expect(screen.getByRole("status").textContent).toBe("/rankings?date=2026-11-18")
     })
 
     test("今日時点に戻すリンクは、絞り込みの状態を保ったまま日付のクエリパラメータをなくす", () => {

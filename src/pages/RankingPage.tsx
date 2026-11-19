@@ -1,6 +1,8 @@
-import type { SubmitEvent } from "react"
 import { Link, useNavigate } from "react-router"
 import type { Group, MembershipStatusFilter, RankingEntry } from "../types/data"
+import { createRankingSearch } from "../utils/createRankingSearch"
+import { createSelectableDate } from "../utils/createSelectableDate"
+import { getSelectableDateParts } from "../utils/getSelectableDateParts"
 import { toIsoDateString } from "../utils/toIsoDateString"
 import { formatDate } from "./formatDate"
 import { formatMembershipDays } from "./formatMembershipDays"
@@ -13,6 +15,8 @@ type Props = {
   membershipStatusFilter: MembershipStatusFilter
   // nullは日付を指定していない（今日時点）ことを表す。
   selectedDate: Date | null
+  // 日付の選択肢に出す最も古い日付。
+  minDate: Date
   today: Date
 }
 
@@ -27,18 +31,7 @@ const membershipStatusFilterOptions: {
   { membershipStatusFilter: "graduated", label: "OG", emptyMessage: "OGはいません" },
 ]
 
-// 絞り込みと日付はURLで共有できるようクエリパラメータで表す。
-// 「すべて」と今日時点はクエリパラメータなしとし、日付を指定しないURLは常にその日の今日時点を表すようにする。
-function createSearch(membershipStatusFilter: MembershipStatusFilter, dateString: string | null): string {
-  const searchParams = new URLSearchParams()
-  if (membershipStatusFilter !== "all") searchParams.set("status", membershipStatusFilter)
-  if (dateString) searchParams.set("date", dateString)
-
-  const search = searchParams.toString()
-  return search ? `?${search}` : ""
-}
-
-export function RankingPage({ groups, selectedGroup, ranking, membershipStatusFilter, selectedDate, today }: Props) {
+export function RankingPage({ groups, selectedGroup, ranking, membershipStatusFilter, selectedDate, minDate, today }: Props) {
   const navigate = useNavigate()
   const selectedOption = membershipStatusFilterOptions.find(
     (option) => option.membershipStatusFilter === membershipStatusFilter,
@@ -47,35 +40,52 @@ export function RankingPage({ groups, selectedGroup, ranking, membershipStatusFi
     { group: null, label: "ハロプロ全体", pathname: "/rankings" },
     ...groups.map((group) => ({ group, label: group.name, pathname: `/rankings/${group.id}` })),
   ]
-  const selectedDateString = selectedDate && toIsoDateString(selectedDate)
-  const baseDateString = selectedDateString ?? toIsoDateString(today)
+  const baseDate = selectedDate ?? today
+  const year = baseDate.getFullYear()
+  const month = baseDate.getMonth() + 1
+  const day = baseDate.getDate()
+  const { years, months, days } = getSelectableDateParts(baseDate, minDate, today)
 
-  function handleDateSubmit(event: SubmitEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const value = new FormData(event.currentTarget).get("date")
-    navigate({ search: createSearch(membershipStatusFilter, typeof value === "string" && value ? value : null) })
+  // 選んだ時点で、その日付のURLへ移動する。選択中の日付はURLだけで持ち、画面側では状態を持たない。
+  function selectDate(year: number, month: number, day: number) {
+    navigate({ search: createRankingSearch(membershipStatusFilter, createSelectableDate(year, month, day, minDate, today)) })
   }
+
+  const dateSelects = [
+    { label: "年", value: year, options: years, onChange: (value: number) => selectDate(value, month, day) },
+    { label: "月", value: month, options: months, onChange: (value: number) => selectDate(year, value, day) },
+    { label: "日", value: day, options: days, onChange: (value: number) => selectDate(year, month, value) },
+  ]
 
   return (
     <main>
       <h1>{selectedGroup ? `${selectedGroup.name} 在籍日数ランキング` : "ハロプロ在籍日数ランキング"}</h1>
-      <p>{formatDate(baseDateString)}時点</p>
-      <form onSubmit={handleDateSubmit}>
-        <label>
-          日付
-          {/* URLの日付が変わったときに入力欄を作り直し、表示中の日付に合わせる。 */}
-          <input key={baseDateString} type="date" name="date" defaultValue={baseDateString} max={toIsoDateString(today)} />
-        </label>
-        <button type="submit">表示</button>
-        <Link to={{ search: createSearch(membershipStatusFilter, null) }}>今日</Link>
-      </form>
+      <p>{formatDate(toIsoDateString(baseDate))}時点</p>
+      <fieldset>
+        <legend>日付</legend>
+        {dateSelects.map((dateSelect) => (
+          <span key={dateSelect.label}>
+            <select
+              aria-label={dateSelect.label}
+              value={dateSelect.value}
+              onChange={(event) => dateSelect.onChange(Number(event.target.value))}
+            >
+              {dateSelect.options.map((option) => (
+                <option key={option} value={option}>{option}</option>
+              ))}
+            </select>
+            {dateSelect.label}
+          </span>
+        ))}
+        <Link to={{ search: createRankingSearch(membershipStatusFilter, null) }}>今日</Link>
+      </fieldset>
       <nav aria-label="ランキングの対象">
         <ul>
           {targetOptions.map((option) => (
             <li key={option.pathname}>
               {/* 対象を切り替えても、絞り込みと日付は引き継ぐ。 */}
               <Link
-                to={{ pathname: option.pathname, search: createSearch(membershipStatusFilter, selectedDateString) }}
+                to={{ pathname: option.pathname, search: createRankingSearch(membershipStatusFilter, selectedDate) }}
                 aria-current={option.group?.id === selectedGroup?.id ? "page" : undefined}
               >
                 {option.label}
@@ -89,7 +99,7 @@ export function RankingPage({ groups, selectedGroup, ranking, membershipStatusFi
           {membershipStatusFilterOptions.map((option) => (
             <li key={option.membershipStatusFilter}>
               <Link
-                to={{ search: createSearch(option.membershipStatusFilter, selectedDateString) }}
+                to={{ search: createRankingSearch(option.membershipStatusFilter, selectedDate) }}
                 aria-current={option === selectedOption ? "page" : undefined}
               >
                 {option.label}
