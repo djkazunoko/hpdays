@@ -11,8 +11,9 @@ import { createGroupRanking } from './utils/createGroupRanking'
 import { createHelloProjectRanking } from './utils/createHelloProjectRanking'
 import { createMemberDetail } from './utils/createMemberDetail'
 import { getEarliestMembershipStartDate } from './utils/getEarliestMembershipStartDate'
+import { normalizeRankingDate } from './utils/normalizeRankingDate'
+import { parseIsoDate } from './utils/parseIsoDate'
 import { parseMembershipStatusFilter } from './utils/parseMembershipStatusFilter'
-import { parseRankingDate } from './utils/parseRankingDate'
 import { updateRankingQueryString } from './utils/updateRankingQueryString'
 
 // Hello! Project全体とグループ別のランキングで共通の処理。selectedGroupがnullの場合はHello! Project全体を表す。
@@ -22,7 +23,9 @@ function RankingRoute({ selectedGroup }: { selectedGroup: Group | null }) {
   const today = new Date()
   const minDate = getEarliestMembershipStartDate(selectedGroup?.id ?? null, members, groupMemberships, traineeMemberships)
   const membershipStatusFilter = parseMembershipStatusFilter(searchParams.get('status'))
-  const selectedDate = parseRankingDate(searchParams.get('date'), minDate, today)
+  // 解釈できない日付は、意図した日付が分からないため指定なし（今日）として扱う。
+  const requestedDate = parseIsoDate(searchParams.get('date'))
+  const selectedDate = requestedDate && normalizeRankingDate(requestedDate, minDate, today)
 
   // 解釈できない値や範囲外の日付が指定された場合は、表示内容と一致するURLに書き換える。
   // 「戻る」で書き換え前のURLに戻らないよう、履歴を置き換える。
