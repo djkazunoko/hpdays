@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes, useParams, useSearchParams } from 'react-router'
+import { Navigate, Route, Routes, useLocation, useParams, useSearchParams } from 'react-router'
 import groupMemberships from './data/group-memberships.json'
 import groups from './data/groups.json'
 import members from './data/members.json'
@@ -13,14 +13,21 @@ import { createMemberDetail } from './utils/createMemberDetail'
 import { getEarliestRankingDate } from './utils/getEarliestRankingDate'
 import { parseMembershipStatusFilter } from './utils/parseMembershipStatusFilter'
 import { parseRankingDate } from './utils/parseRankingDate'
+import { updateRankingSearch } from './utils/updateRankingSearch'
 
 // Hello! Project全体とグループ別のランキングで共通の処理。selectedGroupがnullの場合はHello! Project全体を表す。
 function RankingRoute({ selectedGroup }: { selectedGroup: Group | null }) {
   const [searchParams] = useSearchParams()
+  const location = useLocation()
   const today = new Date()
   const minDate = getEarliestRankingDate(selectedGroup?.id ?? null, members, groupMemberships, traineeMemberships)
   const membershipStatusFilter = parseMembershipStatusFilter(searchParams.get('status'))
   const selectedDate = parseRankingDate(searchParams.get('date'), minDate, today)
+
+  // 解釈できない値や範囲外の日付が指定された場合は、表示内容と一致するURLに書き換える。
+  // 「戻る」で書き換え前のURLに戻らないよう、履歴を置き換える。
+  const search = updateRankingSearch(location.search, membershipStatusFilter, selectedDate)
+  if (search !== location.search) return <Navigate to={{ search }} replace />
 
   // 日付を指定していない場合は、今日時点のランキングを計算する。
   const baseDate = selectedDate ?? today

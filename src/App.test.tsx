@@ -5,7 +5,6 @@ import { afterEach, describe, expect, test, vi } from "vitest"
 import App from "./App"
 import groupMemberships from "./data/group-memberships.json"
 import members from "./data/members.json"
-import { formatDate } from "./pages/formatDate"
 
 // 順位や日数の正しさは計算処理と画面のテストで検証し、ここではデータの追加・修正の影響を受けないよう表示されるメンバーだけを確認する。
 function getRowMemberNames() {
@@ -165,43 +164,71 @@ describe("App", () => {
     expect(getRowMemberNames()).toEqual(getMemberNames(getGroupMemberIdsOnDate("morningmusume", "2015-01-02")))
   })
 
-  test.each(["/rankings?date=2015-02-29", "/rankings?date=2026-11-19"])(
-    "%sのように不正な日付や未来の日付は、今日時点のランキングを表示する",
-    (path) => {
-      // Dateだけを固定し、画面の更新に使われるタイマーは実際のものを使う。
-      vi.useFakeTimers({ toFake: ["Date"] })
-      vi.setSystemTime(new Date(2026, 10, 18, 12, 0))
-      render(
-        <MemoryRouter initialEntries={[path]}>
-          <App />
-        </MemoryRouter>,
-      )
-
-      expect(screen.getByText("2026年11月18日時点")).toBeDefined()
-    },
-  )
-
-  test("対象の最も古い加入日より前の日付は、最も古い加入日時点のランキングを表示する", () => {
+  test.each([
+    { path: "/rankings?date=2015-02-29", label: "存在しない日付" },
+    { path: "/rankings?date=unknown", label: "形式が違う値" },
+    { path: "/rankings?date=2026-11-19", label: "未来の日付" },
+  ])("$labelは、日付のクエリパラメータをなくして今日時点のランキングを表示する", ({ path }) => {
+    // Dateだけを固定し、画面の更新に使われるタイマーは実際のものを使う。
+    vi.useFakeTimers({ toFake: ["Date"] })
+    vi.setSystemTime(new Date(2026, 10, 18, 12, 0))
     render(
-      <MemoryRouter initialEntries={["/rankings/rosychronicle?date=2010-01-01"]}>
+      <MemoryRouter initialEntries={[path]}>
         <App />
+        <CurrentUrl />
       </MemoryRouter>,
     )
 
-    expect(screen.getByText(`${formatDate(getEarliestGroupStartedAt("rosychronicle"))}時点`)).toBeDefined()
+    expect(screen.getByRole("status").textContent).toBe("/rankings")
+    expect(screen.getByText("2026年11月18日時点")).toBeDefined()
   })
 
-  test("対象を切り替えて日付がその対象の最も古い加入日より前になる場合は、最も古い加入日時点のランキングを表示する", () => {
+  test("対象の最も古い加入日より前の日付は、最も古い加入日に寄せる", () => {
+    render(
+      <MemoryRouter initialEntries={["/rankings/rosychronicle?status=active&date=2010-01-01"]}>
+        <App />
+        <CurrentUrl />
+      </MemoryRouter>,
+    )
+
+    expect(screen.getByRole("status").textContent).toBe(`/rankings/rosychronicle?status=active&date=${getEarliestGroupStartedAt("rosychronicle")}`)
+  })
+
+  test("定義していない絞り込みの値は、statusのクエリパラメータをなくしてすべてを表示する", () => {
+    render(
+      <MemoryRouter initialEntries={["/rankings?status=unknown&date=2015-01-02"]}>
+        <App />
+        <CurrentUrl />
+      </MemoryRouter>,
+    )
+
+    expect(screen.getByRole("status").textContent).toBe("/rankings?date=2015-01-02")
+    expect(screen.getByRole("link", { name: "すべて" }).getAttribute("aria-current")).toBe("page")
+  })
+
+  test("URLを書き換える場合も、ランキングの条件ではないパラメータは残す", () => {
+    render(
+      <MemoryRouter initialEntries={["/rankings?utm_source=x&status=unknown"]}>
+        <App />
+        <CurrentUrl />
+      </MemoryRouter>,
+    )
+
+    expect(screen.getByRole("status").textContent).toBe("/rankings?utm_source=x")
+  })
+
+  test("対象を切り替えて日付がその対象の最も古い加入日より前になる場合は、最も古い加入日に寄せる", () => {
     render(
       <MemoryRouter initialEntries={["/rankings/morningmusume?date=2015-01-02"]}>
         <App />
+        <CurrentUrl />
       </MemoryRouter>,
     )
 
     fireEvent.click(screen.getByRole("link", { name: "ロージークロニクル" }))
 
     expect(screen.getByRole("heading", { name: "ロージークロニクル 在籍日数ランキング" })).toBeDefined()
-    expect(screen.getByText(`${formatDate(getEarliestGroupStartedAt("rosychronicle"))}時点`)).toBeDefined()
+    expect(screen.getByRole("status").textContent).toBe(`/rankings/rosychronicle?date=${getEarliestGroupStartedAt("rosychronicle")}`)
   })
 
   test("年・月・日を選ぶと、絞り込みを保ったままその日時点のランキングを表示する", () => {
