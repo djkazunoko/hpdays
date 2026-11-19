@@ -1,9 +1,9 @@
 import { Link, useNavigate } from "react-router"
 import type { Group, MembershipStatusFilter, RankingEntry } from "../types/data"
-import { createRankingSearch } from "../utils/createRankingSearch"
-import { createSelectableDate } from "../utils/createSelectableDate"
-import { getSelectableDateParts } from "../utils/getSelectableDateParts"
+import { createDateFromSelection } from "../utils/createDateFromSelection"
+import { getDateSelectOptions } from "../utils/getDateSelectOptions"
 import { toIsoDateString } from "../utils/toIsoDateString"
+import { toRankingQueryString } from "../utils/toRankingQueryString"
 import { formatDate } from "./formatDate"
 import { formatMembershipDays } from "./formatMembershipDays"
 
@@ -44,11 +44,11 @@ export function RankingPage({ groups, selectedGroup, ranking, membershipStatusFi
   const year = baseDate.getFullYear()
   const month = baseDate.getMonth() + 1
   const day = baseDate.getDate()
-  const { years, months, days } = getSelectableDateParts(baseDate, minDate, today)
+  const { years, months, days } = getDateSelectOptions(baseDate, minDate, today)
 
   // 選んだ時点で、その日付のURLへ移動する。選択中の日付はURLだけで持ち、画面側では状態を持たない。
   function selectDate(year: number, month: number, day: number) {
-    navigate({ search: createRankingSearch(membershipStatusFilter, createSelectableDate(year, month, day, minDate, today)) })
+    navigate({ search: toRankingQueryString(membershipStatusFilter, createDateFromSelection(year, month, day, minDate, today)) })
   }
 
   const dateSelects = [
@@ -77,7 +77,7 @@ export function RankingPage({ groups, selectedGroup, ranking, membershipStatusFi
             {dateSelect.label}
           </span>
         ))}
-        <Link to={{ search: createRankingSearch(membershipStatusFilter, null) }}>今日</Link>
+        <Link to={{ search: toRankingQueryString(membershipStatusFilter, null) }}>今日</Link>
       </fieldset>
       <nav aria-label="ランキングの対象">
         <ul>
@@ -85,7 +85,7 @@ export function RankingPage({ groups, selectedGroup, ranking, membershipStatusFi
             <li key={option.pathname}>
               {/* 対象を切り替えても、絞り込みと日付は引き継ぐ。 */}
               <Link
-                to={{ pathname: option.pathname, search: createRankingSearch(membershipStatusFilter, selectedDate) }}
+                to={{ pathname: option.pathname, search: toRankingQueryString(membershipStatusFilter, selectedDate) }}
                 aria-current={option.group?.id === selectedGroup?.id ? "page" : undefined}
               >
                 {option.label}
@@ -99,7 +99,7 @@ export function RankingPage({ groups, selectedGroup, ranking, membershipStatusFi
           {membershipStatusFilterOptions.map((option) => (
             <li key={option.membershipStatusFilter}>
               <Link
-                to={{ search: createRankingSearch(option.membershipStatusFilter, selectedDate) }}
+                to={{ search: toRankingQueryString(option.membershipStatusFilter, selectedDate) }}
                 aria-current={option === selectedOption ? "page" : undefined}
               >
                 {option.label}

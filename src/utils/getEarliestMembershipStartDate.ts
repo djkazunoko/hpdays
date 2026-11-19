@@ -8,9 +8,9 @@ function toStartDate(startedAt: string): Date {
   return day === undefined ? new Date(year, month, 0) : new Date(year, month - 1, day)
 }
 
-// ランキングで指定できる最も古い日付として、対象の中で最も古い加入日を求める。
+// 対象の中で最も古い加入日を求める。
 // groupIdがnullの場合はHello! Project全体を対象とし、H!P加入日で求める。
-export function getEarliestRankingDate(
+export function getEarliestMembershipStartDate(
   groupId: string | null,
   members: Member[],
   groupMemberships: GroupMembership[],
