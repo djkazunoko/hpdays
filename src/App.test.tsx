@@ -180,7 +180,7 @@ describe("App", () => {
     )
 
     expect(screen.getByRole("status").textContent).toBe("/rankings")
-    expect(screen.getByText("2026年11月18日時点のメンバー")).toBeDefined()
+    expect(screen.getByText("2026年11月18日時点の現役・OG")).toBeDefined()
   })
 
   test("対象の最も古い加入日より前の日付は、最も古い加入日に寄せる", () => {

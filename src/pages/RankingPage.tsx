@@ -27,7 +27,7 @@ const membershipStatusFilterOptions: {
   label: string
   target: string
 }[] = [
-  { membershipStatusFilter: "all", label: "すべて", target: "メンバー" },
+  { membershipStatusFilter: "all", label: "すべて", target: "現役・OG" },
   { membershipStatusFilter: "active", label: "現役", target: "現役メンバー" },
   { membershipStatusFilter: "graduated", label: "OG", target: "OG" },
 ]

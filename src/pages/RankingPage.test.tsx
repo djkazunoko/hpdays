@@ -167,7 +167,7 @@ describe("RankingPage", () => {
   })
 
   test.each([
-    { membershipStatusFilter: "all", heading: "2015年1月2日時点のメンバー" },
+    { membershipStatusFilter: "all", heading: "2015年1月2日時点の現役・OG" },
     { membershipStatusFilter: "active", heading: "2015年1月2日時点の現役メンバー" },
     { membershipStatusFilter: "graduated", heading: "2015年1月2日時点のOG" },
   ] as const)("絞り込みが「$membershipStatusFilter」の場合は、日付と合わせて「$heading」と表示する", ({ membershipStatusFilter, heading }) => {
@@ -177,7 +177,7 @@ describe("RankingPage", () => {
   })
 
   test.each([
-    { membershipStatusFilter: "all", message: "2015年1月2日時点のメンバーはいません" },
+    { membershipStatusFilter: "all", message: "2015年1月2日時点の現役・OGはいません" },
     { membershipStatusFilter: "active", message: "2015年1月2日時点の現役メンバーはいません" },
     { membershipStatusFilter: "graduated", message: "2015年1月2日時点のOGはいません" },
   ] as const)("絞り込みが「$membershipStatusFilter」で対象のメンバーがいない場合は、表の代わりに「$message」と表示する", ({ membershipStatusFilter, message }) => {
@@ -193,14 +193,14 @@ describe("RankingPage", () => {
     test("日付を指定していない場合は、今日時点のランキングであることを表示し、今日を選択する", () => {
       renderRankingPage({ selectedDate: null })
 
-      expect(screen.getByText("2026年11月18日時点のメンバー")).toBeDefined()
+      expect(screen.getByText("2026年11月18日時点の現役・OG")).toBeDefined()
       expect(getSelectedDateParts()).toEqual(["2026", "11", "18"])
     })
 
     test("日付を指定している場合は、その日時点のランキングであることを表示し、その日を選択する", () => {
       renderRankingPage({ selectedDate: new Date(2015, 0, 2) }, "/rankings?date=2015-01-02")
 
-      expect(screen.getByText("2015年1月2日時点のメンバー")).toBeDefined()
+      expect(screen.getByText("2015年1月2日時点の現役・OG")).toBeDefined()
       expect(getSelectedDateParts()).toEqual(["2015", "1", "2"])
     })
 
