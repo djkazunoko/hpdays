@@ -160,7 +160,7 @@ describe("App", () => {
       </MemoryRouter>,
     )
 
-    expect(screen.getByText("2015年1月2日時点")).toBeDefined()
+    expect(screen.getByText("2015年1月2日時点の現役メンバー")).toBeDefined()
     expect(getRowMemberNames()).toEqual(getMemberNames(getGroupMemberIdsOnDate("morningmusume", "2015-01-02")))
   })
 
@@ -180,7 +180,7 @@ describe("App", () => {
     )
 
     expect(screen.getByRole("status").textContent).toBe("/rankings")
-    expect(screen.getByText("2026年11月18日時点")).toBeDefined()
+    expect(screen.getByText("2026年11月18日時点のメンバー")).toBeDefined()
   })
 
   test("対象の最も古い加入日より前の日付は、最も古い加入日に寄せる", () => {
@@ -242,7 +242,7 @@ describe("App", () => {
     fireEvent.change(screen.getByRole("combobox", { name: "月" }), { target: { value: "1" } })
     fireEvent.change(screen.getByRole("combobox", { name: "日" }), { target: { value: "2" } })
 
-    expect(screen.getByText("2015年1月2日時点")).toBeDefined()
+    expect(screen.getByText("2015年1月2日時点の現役メンバー")).toBeDefined()
     expect(screen.getByRole("link", { name: "現役" }).getAttribute("aria-current")).toBe("page")
     expect(getRowMemberNames()).toEqual(getMemberNames(getGroupMemberIdsOnDate("morningmusume", "2015-01-02")))
   })

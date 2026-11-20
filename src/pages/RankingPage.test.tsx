@@ -167,11 +167,21 @@ describe("RankingPage", () => {
   })
 
   test.each([
-    { membershipStatusFilter: "all", message: "メンバーはいません" },
-    { membershipStatusFilter: "active", message: "現役メンバーはいません" },
-    { membershipStatusFilter: "graduated", message: "OGはいません" },
+    { membershipStatusFilter: "all", heading: "2015年1月2日時点のメンバー" },
+    { membershipStatusFilter: "active", heading: "2015年1月2日時点の現役メンバー" },
+    { membershipStatusFilter: "graduated", heading: "2015年1月2日時点のOG" },
+  ] as const)("絞り込みが「$membershipStatusFilter」の場合は、日付と合わせて「$heading」と表示する", ({ membershipStatusFilter, heading }) => {
+    renderRankingPage({ ranking: [createEntry(1, "メンバーA", 100)], membershipStatusFilter, selectedDate: new Date(2015, 0, 2) })
+
+    expect(screen.getByText(heading)).toBeDefined()
+  })
+
+  test.each([
+    { membershipStatusFilter: "all", message: "2015年1月2日時点のメンバーはいません" },
+    { membershipStatusFilter: "active", message: "2015年1月2日時点の現役メンバーはいません" },
+    { membershipStatusFilter: "graduated", message: "2015年1月2日時点のOGはいません" },
   ] as const)("絞り込みが「$membershipStatusFilter」で対象のメンバーがいない場合は、表の代わりに「$message」と表示する", ({ membershipStatusFilter, message }) => {
-    renderRankingPage({ ranking: [], membershipStatusFilter })
+    renderRankingPage({ ranking: [], membershipStatusFilter, selectedDate: new Date(2015, 0, 2) })
 
     expect(screen.getByText(message)).toBeDefined()
     expect(screen.queryByRole("table")).toBeNull()
@@ -183,14 +193,14 @@ describe("RankingPage", () => {
     test("日付を指定していない場合は、今日時点のランキングであることを表示し、今日を選択する", () => {
       renderRankingPage({ selectedDate: null })
 
-      expect(screen.getByText("2026年11月18日時点")).toBeDefined()
+      expect(screen.getByText("2026年11月18日時点のメンバー")).toBeDefined()
       expect(getSelectedDateParts()).toEqual(["2026", "11", "18"])
     })
 
     test("日付を指定している場合は、その日時点のランキングであることを表示し、その日を選択する", () => {
       renderRankingPage({ selectedDate: new Date(2015, 0, 2) }, "/rankings?date=2015-01-02")
 
-      expect(screen.getByText("2015年1月2日時点")).toBeDefined()
+      expect(screen.getByText("2015年1月2日時点のメンバー")).toBeDefined()
       expect(getSelectedDateParts()).toEqual(["2015", "1", "2"])
     })
 
@@ -273,7 +283,7 @@ describe("RankingPage", () => {
   test("対象のメンバーがいる場合は、メッセージを表示しない", () => {
     renderRankingPage({ ranking: [createEntry(1, "メンバーA", 100)], membershipStatusFilter: "active" })
 
-    expect(screen.queryByText("現役メンバーはいません")).toBeNull()
+    expect(screen.queryByText("2026年11月18日時点の現役メンバーはいません")).toBeNull()
     expect(screen.getByRole("table")).toBeDefined()
   })
 })

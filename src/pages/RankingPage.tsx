@@ -20,15 +20,16 @@ type Props = {
   today: Date
 }
 
-// 対象のメンバーがいない場合は、どの条件で絞り込んでいるかが分かるメッセージを表示する。
+// targetは「2016年1月1日時点の現役メンバー」のように、日付と合わせて誰のランキングかを表す。
+// 「現役」「OG」がその日時点での状態であることを、文として読めるようにする。
 const membershipStatusFilterOptions: {
   membershipStatusFilter: MembershipStatusFilter
   label: string
-  emptyMessage: string
+  target: string
 }[] = [
-  { membershipStatusFilter: "all", label: "すべて", emptyMessage: "メンバーはいません" },
-  { membershipStatusFilter: "active", label: "現役", emptyMessage: "現役メンバーはいません" },
-  { membershipStatusFilter: "graduated", label: "OG", emptyMessage: "OGはいません" },
+  { membershipStatusFilter: "all", label: "すべて", target: "メンバー" },
+  { membershipStatusFilter: "active", label: "現役", target: "現役メンバー" },
+  { membershipStatusFilter: "graduated", label: "OG", target: "OG" },
 ]
 
 export function RankingPage({ groups, selectedGroup, ranking, membershipStatusFilter, selectedDate, minDate, today }: Props) {
@@ -45,6 +46,7 @@ export function RankingPage({ groups, selectedGroup, ranking, membershipStatusFi
   const month = baseDate.getMonth() + 1
   const day = baseDate.getDate()
   const { years, months, days } = getDateSelectOptions(baseDate, minDate, today)
+  const rankingTarget = `${formatDate(toIsoDateString(baseDate))}時点の${selectedOption?.target}`
 
   // 選んだ時点で、その日付のURLへ移動する。選択中の日付はURLだけで持ち、画面側では状態を持たない。
   function selectDate(year: number, month: number, day: number) {
@@ -60,7 +62,7 @@ export function RankingPage({ groups, selectedGroup, ranking, membershipStatusFi
   return (
     <main>
       <h1>{selectedGroup ? `${selectedGroup.name} 在籍日数ランキング` : "ハロプロ在籍日数ランキング"}</h1>
-      <p>{formatDate(toIsoDateString(baseDate))}時点</p>
+      <p>{rankingTarget}</p>
       <fieldset>
         <legend>日付</legend>
         {dateSelects.map((dateSelect) => (
@@ -109,7 +111,7 @@ export function RankingPage({ groups, selectedGroup, ranking, membershipStatusFi
         </ul>
       </nav>
       {ranking.length === 0 ? (
-        <p>{selectedOption?.emptyMessage}</p>
+        <p>{rankingTarget}はいません</p>
       ) : (
         <table>
           <thead>
