@@ -23,7 +23,7 @@ describe("getDateSelectOptions", () => {
     { date: new Date(2015, 1, 1), lastDay: 28, label: "平年の2月" },
     { date: new Date(2016, 1, 1), lastDay: 29, label: "うるう年の2月" },
     { date: new Date(2015, 3, 1), lastDay: 30, label: "4月" },
-  ])("$labelは$lastDay日まで選べる", ({ date, lastDay }) => {
+  ])("「$label」の日の選択肢は1〜$lastDay", ({ date, lastDay }) => {
     expect(getDateSelectOptions(date, minDate, today).days).toEqual(range(1, lastDay))
   })
 

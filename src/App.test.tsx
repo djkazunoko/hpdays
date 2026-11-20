@@ -168,7 +168,7 @@ describe("App", () => {
     { path: "/rankings?date=2015-02-29", label: "存在しない日付" },
     { path: "/rankings?date=unknown", label: "形式が違う値" },
     { path: "/rankings?date=2026-11-19", label: "未来の日付" },
-  ])("$labelは、日付のクエリパラメータをなくして今日時点のランキングを表示する", ({ path }) => {
+  ])("「$label」は、日付のクエリパラメータをなくして今日時点のランキングを表示する", ({ path }) => {
     // Dateだけを固定し、画面の更新に使われるタイマーは実際のものを使う。
     vi.useFakeTimers({ toFake: ["Date"] })
     vi.setSystemTime(new Date(2026, 10, 18, 12, 0))
