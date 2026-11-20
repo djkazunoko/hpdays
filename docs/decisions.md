@@ -56,7 +56,7 @@
 
 ### 在籍期間・日数・順位
 
-- 在籍日数は加入日を1日目として、加入日と終了日の両方を含めて計算する。現役メンバーは現在日を終了日として計算する。
+- 在籍日数は加入日を1日目として、加入日と終了日の両方を含めて計算する。基準日（今日、またはランキングで指定した日）より後に卒業する在籍は、基準日を終了日として計算する。
 - Hello! Project在籍は、公式にHello! Projectの一員として扱われている期間とする。所属事務所や、M-lineなどHello! Project卒業後の活動の枠への所属では判断しない。
 - Hello! Projectの卒業日は、公式の「ハロー！プロジェクトを卒業」という告知で判断する。グループ卒業と同時に告知されていればグループ卒業日と同じ日になる。
 - Hello! Project加入日・卒業日は、`members.json` に保持している場合はその値を使い、保持していない場合は以下のとおり導出する。
@@ -68,8 +68,9 @@
 - ランキングは在籍日数の降順とし、月単位の加入日は最小在籍日数で比較する。
 - Hello! Project・グループの両ランキングで、同日数は同順位とし、次の順位は同順位の人数分を飛ばす（例：1、2、2、4位）。
 - 最小在籍日数は「○○日以上」と表示し、確認できる最小値であることが分かるようにする。
-- 現役・卒業済みは、卒業日の有無で判定する。Hello! Project全体のランキングではHello! Project在籍期間、グループ別のランキングではグループ在籍1件ごとに判定する。グループを卒業してHello! Projectに残っている人は、そのグループのランキングでは卒業済みとなる。
+- 現役・卒業済みは、基準日時点で卒業日を迎えたかどうかで判定する。卒業日当日は現役とし、翌日から卒業済みとする。Hello! Project全体のランキングではHello! Project在籍期間、グループ別のランキングではグループ在籍1件ごとに判定する。グループを卒業してHello! Projectに残っている人は、そのグループのランキングでは卒業済みとなる。
 - ランキングを現役・卒業済みで絞り込む場合は、絞り込んだ対象の中で順位を付け直す。
+- ランキングの対象は、基準日時点で在籍日数が1日以上の人とする。基準日より後に加入した人と、加入日が月までしか分からず基準日がその月末より前の人は含めない。
 
 参照：[Issue #4の数え方](https://github.com/djkazunoko/hpdays/issues/4#issuecomment-5596338412)、
 [Issue #15](https://github.com/djkazunoko/hpdays/issues/15)、
@@ -77,7 +78,8 @@
 [Issue #6](https://github.com/djkazunoko/hpdays/issues/6)、
 [Issue #21の決定事項](https://github.com/djkazunoko/hpdays/issues/21#issuecomment-6595817335)、
 [Hello! Project在籍の定義](https://github.com/djkazunoko/hpdays/issues/25#issuecomment-6768120557)、
-[PR #38](https://github.com/djkazunoko/hpdays/pull/38)
+[PR #38](https://github.com/djkazunoko/hpdays/pull/38)、
+[PR #42](https://github.com/djkazunoko/hpdays/pull/42)
 
 ## URL設計
 
@@ -98,7 +100,13 @@
 - メンバー一覧の `/members` は作成しない。`/members` と存在しないメンバーIDへのアクセスは、存在しないページとして扱う。`members.json` に存在してもグループ在籍のないメンバーは掲載対象ではないため、同じく存在しないページとして扱う。
 - `groups.json` に存在しないグループIDへのアクセスも、存在しないページとして扱う。存在しないページは、定義していないパスと同じくReact Routerで表示する。
 - 絞り込み、並び順、選択状態など、共有時に再現する価値のある表示条件はクエリパラメータで表す。具体的な名前・保持する状態は各機能の実装時に決める。
-- ランキングの現役・卒業済みの絞り込みは `status` クエリパラメータで表す（`?status=active`、`?status=graduated`）。パラメータがない場合は「すべて」とする。定義していない値も「すべて」として扱い、存在しないページにはしない。
+- ランキングの現役・卒業済みの絞り込みは `status` クエリパラメータで表す（`?status=active`、`?status=graduated`）。パラメータがない場合は「すべて」とする。定義していない値は「すべて」として表示し、存在しないページにはしない。
+- ランキングの指定日は `date` クエリパラメータで表す（`?date=2016-01-01`）。パラメータがない場合は今日時点とする。今日時点を表すURLには `date` を付けず、日付を指定しないURLは常にアクセスした日の今日時点を表す。
+- ランキングのクエリパラメータが解釈できない値や範囲外の値の場合は、表示内容に合わせてURLを書き換える。「戻る」で書き換え前のURLに戻らないよう、履歴は置き換える。
+  - 定義していない `status`：「すべて」を表示し、`status` をなくす
+  - 存在しない日付・形式が違う値・未来の日付：今日時点を表示し、`date` をなくす
+  - 対象の最も古い加入日より前の日付：最も古い加入日時点を表示し、`date` をその日にする
+- URLを書き換える場合も、`utm_source` などランキングの条件ではないパラメータは、アクセス解析で使われるため残す。
 - ズーム倍率、スクロール位置、hover状態など、一時的なUI状態までURLに保持する必要はない。
 - メンバー比較など、将来の機能のURLは必要になった時点で決定する。
 - 直接アクセスされたURLは、Cloudflare Workersが `index.html` を返し、React Routerで表示する画面を決める。この動作は `wrangler.jsonc` の `not_found_handling: "single-page-application"` で明示的に設定し、存在しないページもReact Routerで表示する。
@@ -109,7 +117,8 @@
 [PR #30](https://github.com/djkazunoko/hpdays/pull/30)、
 [PR #38](https://github.com/djkazunoko/hpdays/pull/38)、
 [PR #40](https://github.com/djkazunoko/hpdays/pull/40)、
-[PR #41](https://github.com/djkazunoko/hpdays/pull/41)
+[PR #41](https://github.com/djkazunoko/hpdays/pull/41)、
+[PR #42](https://github.com/djkazunoko/hpdays/pull/42)
 
 ## 画面設計
 
@@ -130,9 +139,12 @@
 
 - 画面上では、卒業済みのメンバーを「OG」と表示する。公式でもファンの間でも一般的に使われている「現役」「OG」の呼び方に合わせる。データ・コード上では「卒業済み」（`graduated`）と呼ぶ。
 - ランキングの「すべて・現役・OG」はリンクで切り替える。状態をURLだけで持ち、画面側では状態を持たない。
-- ランキングの対象（ハロプロ全体・各グループ）もリンクで切り替え、`groups.json` の順に並べる。対象を切り替えても、現役・OGの絞り込みは引き継ぐ。
+- ランキングの対象（ハロプロ全体・各グループ）もリンクで切り替え、`groups.json` の順に並べる。対象を切り替えても、現役・OGの絞り込みと指定日は引き継ぐ。指定日が切り替え先の対象の最も古い加入日より前になる場合は、その加入日に寄せる。
 - Hello! Project全体のランキングの見出しは「ハロプロ在籍日数ランキング」とし、対象が分かるようにする。
-- ランキングの対象が0人の場合は、表の代わりに「現役メンバーはいません」のように、絞り込みの条件が分かるメッセージを表示する。
+- ランキングの表の上に、基準日と絞り込みを「2016年1月1日時点の現役・OG」「2016年1月1日時点の現役メンバー」「2016年1月1日時点のOG」のように1文で表示し、現役・OGが基準日時点の状態であることが分かるようにする。
+- ランキングの対象が0人の場合は、表の代わりに「2016年1月1日時点の現役メンバーはいません」のように、基準日と絞り込みの条件が分かるメッセージを表示する。
+- ランキングの指定日は年・月・日のプルダウンで選び、選んだ時点でその日付のURLへ移動する。年・月・日とも古い順に並べる。「今日」のリンクで今日時点に戻せるようにする。
+- 選べる日付は、対象（Hello! Project全体・各グループ）の最も古い加入日から今日までとする。月までしか分からない加入日は、在籍日数の計算と同じく月末とする。上限は対象にかかわらず今日とし、活動を終了したグループでも、終了後は全員OGとしてランキングを表示する。
 - ランキングのメンバー名は、メンバー詳細へのリンクにする。
 - メンバー詳細には、メンバー名、Hello! Project在籍期間・在籍日数、研修生加入日（研修生歴がある場合）、グループごとの在籍期間・在籍日数を表示する。グループ在籍は加入日の古い順に並べる。
 - メンバー詳細からランキングへは、Hello! Project全体のランキングへのリンクと、グループ名からそのグループのランキングへのリンクで戻れるようにする。現役・OGの絞り込みは引き継がない。
@@ -143,7 +155,8 @@
 [PR #30](https://github.com/djkazunoko/hpdays/pull/30)、
 [PR #38](https://github.com/djkazunoko/hpdays/pull/38)、
 [PR #40](https://github.com/djkazunoko/hpdays/pull/40)、
-[PR #41](https://github.com/djkazunoko/hpdays/pull/41)
+[PR #41](https://github.com/djkazunoko/hpdays/pull/41)、
+[PR #42](https://github.com/djkazunoko/hpdays/pull/42)
 
 ## 実装方針
 
@@ -159,12 +172,16 @@
 - `RankingPage` は、グループの一覧と選択中のグループを受け取る。Hello! Project全体は、選択中のグループを省略せず `null` で表す。
 - メンバー詳細の計算結果は `MemberDetail` とする。在籍期間と在籍日数をまとめたものは `MembershipSummary`、グループ在籍の分はグループを含めた `GroupMembershipSummary` とし、JSONの在籍データ（`GroupMembership`）と名前で区別する。研修生歴がない場合、研修生加入日は省略せず `null` で表す。
 - `createMemberDetail` は、存在しないメンバーIDやグループ在籍のないメンバーでは `null` を返し、ルート定義で存在しないページを表示する。
+- ランキングの指定日は、指定がない（今日時点）場合を `null` で表し、固定の日付と区別する。ランキングの計算処理は基準日を引数で受け取る。
+- 月までしか分からない日付を月末とする境界は、在籍日数の計算と選べる最も古い日付の計算で同じ関数（`parseMembershipDate`）を使い、選べる日付のランキングが空にならないようにする。
+- クエリパラメータの解釈と、表示内容に合わせたURLの組み立ては `src/utils` で行い、URLの書き換え（リダイレクト）はルート定義で行う。
 
 参照：[PR #22](https://github.com/djkazunoko/hpdays/pull/22)、
 [PR #30](https://github.com/djkazunoko/hpdays/pull/30)、
 [PR #38](https://github.com/djkazunoko/hpdays/pull/38)、
 [PR #40](https://github.com/djkazunoko/hpdays/pull/40)、
-[PR #41](https://github.com/djkazunoko/hpdays/pull/41)
+[PR #41](https://github.com/djkazunoko/hpdays/pull/41)、
+[PR #42](https://github.com/djkazunoko/hpdays/pull/42)
 
 ### ライブラリ
 
