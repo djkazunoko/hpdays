@@ -1,15 +1,10 @@
 import { Link } from "react-router"
 import type { MemberDetail, MembershipPeriod } from "../types/data"
+import { formatDate } from "./formatDate"
 import { formatMembershipDays } from "./formatMembershipDays"
 
 type Props = {
   memberDetail: MemberDetail
-}
-
-// 月までしか分からない日付は、日を補わず月まで表示する。
-function formatDate(date: string): string {
-  const [year, month, day] = date.split("-").map(Number)
-  return `${year}年${month}月${day === undefined ? "" : `${day}日`}`
 }
 
 function formatMembershipPeriod({ startedAt, endedAt }: MembershipPeriod): string {

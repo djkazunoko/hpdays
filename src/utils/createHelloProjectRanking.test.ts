@@ -93,4 +93,49 @@ describe("createHelloProjectRanking", () => {
       expect(createRanking("graduated")).toEqual([["explicitly-graduated-member", 1], ["graduated-member", 2]])
     })
   })
+
+  describe("基準日時点のランキング", () => {
+    const members: Member[] = ["active-member", "transferred-member", "graduated-member", "monthly-trainee-member", "new-member"]
+      .map((id) => ({ id, name: id, birthday: "2000-01-01" }))
+    const memberships: GroupMembership[] = [
+      { memberId: "active-member", groupId: "first-group", startedAt: "2020-01-03", endedAt: null },
+      // グループ間の空白期間も含めて、H!P在籍期間は連続しているものとして扱う。
+      { memberId: "transferred-member", groupId: "first-group", startedAt: "2020-01-01", endedAt: "2020-01-03" },
+      { memberId: "transferred-member", groupId: "second-group", startedAt: "2020-01-10", endedAt: "2020-01-20" },
+      { memberId: "graduated-member", groupId: "first-group", startedAt: "2020-01-02", endedAt: "2020-01-04" },
+      { memberId: "monthly-trainee-member", groupId: "first-group", startedAt: "2020-02-01", endedAt: null },
+      { memberId: "new-member", groupId: "first-group", startedAt: "2020-01-06", endedAt: null },
+    ]
+    const trainees = [{ memberId: "monthly-trainee-member", startedAt: "2020-01" }]
+
+    function createRanking(membershipStatusFilter: MembershipStatusFilter, baseDate: Date) {
+      return createHelloProjectRanking(members, memberships, trainees, membershipStatusFilter, baseDate)
+        .map((entry) => [entry.member.id, entry.membershipDays, entry.rank])
+    }
+
+    test("基準日より後に加入したメンバーは含めず、基準日時点の在籍日数で順位を付ける", () => {
+      expect(createRanking("all", new Date(2020, 0, 5))).toEqual([
+        ["transferred-member", 5, 1],
+        ["active-member", 3, 2],
+        ["graduated-member", 3, 2],
+      ])
+    })
+
+    test("月単位の加入日は、月末を開始境界とするため同じ月の途中を基準日にした場合は含めない", () => {
+      expect(createRanking("all", new Date(2020, 0, 30)).map(([id]) => id)).not.toContain("monthly-trainee-member")
+    })
+
+    test("月単位の加入日は、月末を基準日にした場合に在籍日数1日以上として含める", () => {
+      const entry = createHelloProjectRanking(members, memberships, trainees, "all", new Date(2020, 0, 31))
+        .find((entry) => entry.member.id === "monthly-trainee-member")
+      expect(entry).toMatchObject({ membershipDays: 1, isMinimumMembershipDays: true })
+    })
+
+    test("基準日時点のH!P在籍状況で現役・卒業済みを判定する", () => {
+      // transferred-memberは2020-01-20にH!Pを卒業するが、基準日時点では在籍中のため現役とする。
+      const baseDate = new Date(2020, 0, 5)
+      expect(createRanking("active", baseDate).map(([id]) => id)).toEqual(["transferred-member", "active-member"])
+      expect(createRanking("graduated", baseDate).map(([id]) => id)).toEqual(["graduated-member"])
+    })
+  })
 })

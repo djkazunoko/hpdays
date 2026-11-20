@@ -9,21 +9,27 @@ export function createGroupRanking(
   members: Member[],
   groupMemberships: GroupMembership[],
   membershipStatusFilter: MembershipStatusFilter,
-  currentDate = new Date(),
+  baseDate = new Date(),
 ): RankingEntry[] {
-  const targetGroupMemberships = groupMemberships.filter((groupMembership) =>
-    groupMembership.groupId === groupId && matchesMembershipStatusFilter(groupMembership, membershipStatusFilter),
-  )
-  const unrankedEntries = targetGroupMemberships.map((groupMembership) => {
+  const unrankedEntries: Omit<RankingEntry, "rank">[] = []
+
+  for (const groupMembership of groupMemberships) {
+    if (groupMembership.groupId !== groupId) continue
+    if (!matchesMembershipStatusFilter(groupMembership, membershipStatusFilter, baseDate)) continue
+
+    const membershipDays = calculateMembershipDays(groupMembership, baseDate)
+    // 基準日より後に加入した在籍は、基準日時点では在籍していないため含めない。
+    if (membershipDays < 1) continue
+
     const member = members.find((member) => member.id === groupMembership.memberId)
     if (!member) throw new Error(`Member not found: ${groupMembership.memberId}`)
 
-    return {
+    unrankedEntries.push({
       member,
-      membershipDays: calculateMembershipDays(groupMembership, currentDate),
+      membershipDays,
       isMinimumMembershipDays: isMinimumMembershipDays(groupMembership),
-    }
-  })
+    })
+  }
 
   return rankByMembershipDays(unrankedEntries)
 }
