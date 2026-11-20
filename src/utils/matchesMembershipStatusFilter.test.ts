@@ -6,17 +6,17 @@ const graduatedMembershipPeriod = { startedAt: "2011-01-02", endedAt: "2025-07-0
 const baseDate = new Date(2026, 8, 10)
 
 describe("matchesMembershipStatusFilter", () => {
-  test("すべてを指定した場合は、卒業日の有無に関係なく対象にする", () => {
+  test("すべてを指定した場合は、現役・卒業済みに関係なく対象にする", () => {
     expect(matchesMembershipStatusFilter(activeMembershipPeriod, "all", baseDate)).toBe(true)
     expect(matchesMembershipStatusFilter(graduatedMembershipPeriod, "all", baseDate)).toBe(true)
   })
 
-  test("現役を指定した場合は、卒業日のない在籍期間だけを対象にする", () => {
+  test("現役を指定した場合は、基準日時点で卒業していない在籍期間だけを対象にする", () => {
     expect(matchesMembershipStatusFilter(activeMembershipPeriod, "active", baseDate)).toBe(true)
     expect(matchesMembershipStatusFilter(graduatedMembershipPeriod, "active", baseDate)).toBe(false)
   })
 
-  test("卒業済みを指定した場合は、卒業日のある在籍期間だけを対象にする", () => {
+  test("卒業済みを指定した場合は、基準日時点で卒業している在籍期間だけを対象にする", () => {
     expect(matchesMembershipStatusFilter(activeMembershipPeriod, "graduated", baseDate)).toBe(false)
     expect(matchesMembershipStatusFilter(graduatedMembershipPeriod, "graduated", baseDate)).toBe(true)
   })
