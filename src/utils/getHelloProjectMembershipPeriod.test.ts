@@ -27,6 +27,21 @@ describe("getHelloProjectMembershipPeriod", () => {
     ])).toEqual({ startedAt: "2011-11", endedAt: "2020-01-12" })
   })
 
+  test("グループ在籍の後に研修生になった場合は最も古いグループ加入日を加入日にする", () => {
+    expect(getHelloProjectMembershipPeriod(member, groupMemberships, [
+      { memberId: "multi-group-member", startedAt: "2020-01-05" },
+    ])?.startedAt).toBe("2020-01-01")
+  })
+
+  test("月単位の研修生加入日は月末を境界としてグループ加入日と比べる", () => {
+    expect(getHelloProjectMembershipPeriod(member, groupMemberships, [
+      { memberId: "multi-group-member", startedAt: "2020-01" },
+    ])?.startedAt).toBe("2020-01-01")
+    expect(getHelloProjectMembershipPeriod(member, groupMemberships, [
+      { memberId: "multi-group-member", startedAt: "2019-12" },
+    ])?.startedAt).toBe("2019-12")
+  })
+
   test("H!P加入日の明示値があれば研修生歴やグループ在籍より優先する", () => {
     expect(getHelloProjectMembershipPeriod(
       { ...member, helloProjectStartedAt: "2010-01-01" },
